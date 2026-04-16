@@ -1,0 +1,169 @@
+<aside
+    class="fixed inset-y-0 left-0 bg-white text-white z-40 sidebar-transition transition-all duration-300 ease-in-out flex flex-col justify-between rounded-r-2xl shadow-xl border border-r-gray-200"
+    :class="sidebarOpen ? 'w-64' : 'w-20'">
+    <div>
+        {{-- Logo --}}
+        <div class="flex flex-col items-center py-4">
+            <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="w-12 h-12" />
+            <span class="mt-2 text-gray-800 font-semibold text-sm transition-opacity duration-200"
+                :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                FDM Bulungan
+            </span>
+        </div>
+
+        {{-- Navigation --}}
+        <nav class="px-4 py-2 space-y-2">
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-house" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Dashboard
+                </span>
+            </a>
+
+            <a href="{{ route('penerimaan.index') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Penerimaan
+                </span>
+            </a>
+
+            <a href="{{ route('penyemaian.index') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Penyemaian
+                </span>
+            </a>
+
+            <a href="#"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 text-gray-900 hover:bg-gray-100"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Inspeksi
+                </span>
+            </a>
+            <a href="{{ route('user.index') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('user.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-user" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    User
+                </span>
+            </a>
+            <a href="{{ route('team.index') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('team.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-user-group" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Tim
+                </span>
+            </a>
+            <a href="#"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 text-gray-900 hover:bg-gray-100"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-id-badge" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Role
+                </span>
+            </a>
+            <div x-data="{ algoritmaOpen: false }">
+                <button @click="algoritmaOpen = !algoritmaOpen"
+                    class="w-full flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-cog" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 flex-1 text-left transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Algoritma
+                    </span>
+                    <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200"
+                        :class="{ 'hidden': !sidebarOpen, 'rotate-180': algoritmaOpen }"></i>
+                </button>
+
+                {{-- Sub-menu --}}
+                <div x-show="algoritmaOpen && sidebarOpen" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 -translate-y-1"
+                    class="ml-4 mt-1 space-y-1 border-l-2 border-gray-100 pl-3">
+
+                    <a href="{{ route('algoritma.kriteria') }}"
+                        class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.kriteria') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}} text-sm">
+                        <i class="fa-solid fa-list-check text-sm w-4 text-center"></i>
+                        <span class="ml-3">Kriteria</span>
+                    </a>
+
+                    <a href="{{ route('algoritma.bobot') }}"
+                        class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.bobot') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}} text-sm">
+                        <i class="fa-solid fa-weight-scale text-sm w-4 text-center"></i>
+                        <span class="ml-3">Bobot</span>
+                    </a>
+                </div>
+
+                {{-- Collapsed: show sub-icons only --}}
+                <div x-show="algoritmaOpen && !sidebarOpen" class="mt-1 space-y-1 flex flex-col items-center">
+                    <a href="{{ route('algoritma.kriteria') }}" title="Kriteria"
+                        class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.kriteria') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}">
+                        <i class="fa-solid fa-list-check text-lg"></i>
+                    </a>
+                    <a href="{{ route('algoritma.bobot') }}" title="Bobot"
+                        class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.bobot') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}">
+                        <i class="fa-solid fa-weight-scale text-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    {{-- User Profile & Logout --}}
+    @auth
+        <div class="border-t border-gray-100 p-4">
+            <div class="flex items-center gap-3" :class="{ 'justify-center': !sidebarOpen }">
+                {{-- Avatar --}}
+                <div
+                    class="w-9 h-9 rounded-full bg-[var(--flora-teal-pale)] border-2 border-[var(--flora-teal-light)] flex items-center justify-center flex-shrink-0 text-[var(--flora-teal)] font-semibold text-sm">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+
+                {{-- Name & role --}}
+                <div class="flex-1 min-w-0 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
+                    <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
+                </div>
+
+                {{-- Logout --}}
+                <form method="POST" action="{{ route('logout') }}" :class="{ 'hidden': !sidebarOpen }">
+                    @csrf
+                    <button type="submit" title="Logout"
+                        class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-50">
+                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                    </button>
+                </form>
+            </div>
+
+            {{-- Collapsed logout --}}
+            <form method="POST" action="{{ route('logout') }}" class="mt-2" :class="{ 'hidden': sidebarOpen }">
+                @csrf
+                <button type="submit" title="Logout"
+                    class="w-full flex justify-center text-gray-400 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </button>
+            </form>
+        </div>
+    @endauth
+</aside>
