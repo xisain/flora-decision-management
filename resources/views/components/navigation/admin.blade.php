@@ -13,8 +13,8 @@
 
         {{-- Navigation --}}
         <nav class="px-4 py-2 space-y-2">
-            <a href="{{ route('admin.dashboard') }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ route('admin.home') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.home') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-house" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -23,7 +23,8 @@
                 </span>
             </a>
 
-            <a href="{{ route('penerimaan.index') }}"
+            {{-- Penerimaan --}}
+            <a href="{{ Route::has('penerimaan.index') ? route('penerimaan.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -33,7 +34,8 @@
                 </span>
             </a>
 
-            <a href="{{ route('penyemaian.index') }}"
+            {{-- Penyemaian --}}
+            <a href="{{ Route::has('penyemaian.index') ? route('penyemaian.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -52,7 +54,8 @@
                     Inspeksi
                 </span>
             </a>
-            <a href="{{ route('user.index') }}"
+            {{-- User --}}
+            <a href="{{ Route::has('user.index') ? route('user.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('user.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-user" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -61,7 +64,8 @@
                     User
                 </span>
             </a>
-            <a href="{{ route('team.index') }}"
+            {{-- Tim --}}
+            <a href="{{ Route::has('team.index') ? route('team.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('team.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-user-group" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -101,13 +105,15 @@
                     x-transition:leave-end="opacity-0 -translate-y-1"
                     class="ml-4 mt-1 space-y-1 border-l-2 border-gray-100 pl-3">
 
-                    <a href="{{ route('algoritma.kriteria') }}"
+                    {{-- Algoritma - Kriteria --}}
+                    <a href="{{ Route::has('algoritma.kriteria') ? route('algoritma.kriteria') : '#' }}"
                         class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.kriteria') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}} text-sm">
                         <i class="fa-solid fa-list-check text-sm w-4 text-center"></i>
                         <span class="ml-3">Kriteria</span>
                     </a>
 
-                    <a href="{{ route('algoritma.bobot') }}"
+                    {{-- Algoritma - Bobot --}}
+                    <a href="{{ Route::has('algoritma.bobot') ? route('algoritma.bobot') : '#' }}"
                         class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.bobot') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}} text-sm">
                         <i class="fa-solid fa-weight-scale text-sm w-4 text-center"></i>
                         <span class="ml-3">Bobot</span>
@@ -116,11 +122,11 @@
 
                 {{-- Collapsed: show sub-icons only --}}
                 <div x-show="algoritmaOpen && !sidebarOpen" class="mt-1 space-y-1 flex flex-col items-center">
-                    <a href="{{ route('algoritma.kriteria') }}" title="Kriteria"
+                    <a href="{{ Route::has('algoritma.kriteria') ? route('algoritma.kriteria') : '#' }}" title="Kriteria"
                         class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.kriteria') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}">
                         <i class="fa-solid fa-list-check text-lg"></i>
                     </a>
-                    <a href="{{ route('algoritma.bobot') }}" title="Bobot"
+                    <a href="{{ Route::has('algoritma.bobot') ? route('algoritma.bobot') : '#' }}" title="Bobot"
                         class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 {{ request()->routeIs('algoritma.bobot') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}">
                         <i class="fa-solid fa-weight-scale text-lg"></i>
                     </a>

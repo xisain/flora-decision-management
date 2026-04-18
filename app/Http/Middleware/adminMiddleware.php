@@ -15,6 +15,11 @@ class adminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+
+        if ($request->user()->roles->id == 1) {
+            return $next($request);
+        } else {
+            abort(403, 'Tidak Memiliki Akses');
+        }
     }
 }

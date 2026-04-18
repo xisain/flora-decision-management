@@ -33,7 +33,7 @@ class RegisterRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:3',
-                'unique:collectors,initial_collector_name'
+                'unique:collector_infos,initial_collector_name'
             ]
         ];
     }
