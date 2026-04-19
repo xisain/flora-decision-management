@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             roleSeeder::class,
         ]);
+        User::factory(100)->create();
     }
 }

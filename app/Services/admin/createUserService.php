@@ -13,7 +13,7 @@ class createUserService
         //
     }
     public function register(array $data)  : User {
-        return  DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -22,7 +22,7 @@ class createUserService
                 'phone_number' => $data['phone_number'],
                 'account_status' => $data['account_status'] === 'active' ? true : false,
             ]);
-            if($data['is_collector'] != null){
+            if(!empty($data['is_collector'])){
                 CollectorInfo::create([
                     'user_id'=> $user->id,
                     'full_name' => $user->name,
@@ -31,6 +31,7 @@ class createUserService
                     'last_Sequence'=> 0,
                 ]);
             }
+        return $user;
         });
     }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::create('exploration_team_member', function(Blueprint $table) {
             $table->id();
             $table->foreignId('exploration_team_id')->nullable()->constrained('exploration_team')->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('collector_id')->nullable()->constrained('collector_infos')->nullOnDelete();
             $table->string('Peran');
             $table->timestamps();
         });
@@ -32,8 +32,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::drop('exploration_team');
         Schema::drop('exploration_team_member');
+        Schema::drop('exploration_team');
 
     }
 };

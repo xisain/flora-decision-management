@@ -21,7 +21,7 @@ class RegisterService
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'phone_number' => $data['phone_number'],
-                'roles_id' => 1,
+                'roles_id' => 3,
             ]);
 
             if (filled($data['collector_initial'])) {

@@ -139,7 +139,7 @@
                                             {{ mb_substr($user->name, 0, 1) }}
                                         </div>
                                         <div>
-                                            <p class="font-medium text-gray-800 leading-tight">{{ $user->name }}</p>
+                                            <p class="font-medium text-gray-800 leading-tight">{{ $user->name }} <span class="text-blue-300">({{ $user->collectorInfo?->initial_collector_name }})</span></p>
                                             <p class="text-xs text-gray-400 mt-0.5">{{ $user->email }}</p>
                                         </div>
                                     </div>
