@@ -47,11 +47,11 @@
         </div>
 
         {{-- Table Card --}}
-        <div class="bg-white border border-[var(--flora-sage-mid)] rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
 
             {{-- Toolbar --}}
             <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-[var(--flora-sage-mid)] bg-gray-50/60">
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-200 bg-gray-50/60">
 
                 {{-- Search --}}
                 <form method="GET" action="{{ route('user.index') }}" class="flex items-center gap-2 w-full sm:w-auto">
@@ -106,7 +106,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="bg-gray-50 border-b border-[var(--flora-sage-mid)]">
+                        <tr class="bg-gray-50 border-b border-gray-200">
                             <th
                                 class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
                                 #</th>

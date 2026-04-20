@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CollectorController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ExplorationTeamController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\adminMiddleware;
@@ -32,6 +33,7 @@ Route::prefix('admin')->middleware([adminMiddleware::class, 'auth'])->group(func
     Route::prefix('management')->group(function () {
         Route::resource('user',UserController::class);
         Route::resource('collector',CollectorController::class);
+        Route::resource('tim-explorasi', ExplorationTeamController::class);
         // Route::prefix('pengguna')->group(function () {
         // });
         // Route::prefix('collector')->group(function () {
