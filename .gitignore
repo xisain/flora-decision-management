@@ -18,6 +18,8 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/.claude/
+/.github/
 /vendor
 _ide_helper.php
 Homestead.json
