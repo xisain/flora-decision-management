@@ -15,24 +15,26 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 })->name('home');
-Route::post('/sidebar/toggle', function (Request $request) {
-    $request->session()->put('sidebar_open', $request->input('open'));
+Route::middleware('auth')->group(function () {
+    Route::post('/sidebar/toggle', function (Request $request) {
+        $request->session()->put('sidebar_open', $request->input('open'));
 
-    return response()->json(['success' => true]);
-})->name('sidebar.toggle');
-Route::prefix('admin')->middleware([adminMiddleware::class, 'auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
-    Route::prefix('management')->group(function () {
-        Route::resource('user', UserController::class);
-        Route::resource('collector', CollectorController::class);
-        Route::resource('tim-explorasi', ExplorationTeamController::class);
-        Route::resource('criteria', CriteriaController::class);
+        return response()->json(['success' => true]);
+    })->name('sidebar.toggle');
+    Route::prefix('admin')->middleware([adminMiddleware::class, 'auth'])->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
+        Route::prefix('management')->group(function () {
+            Route::resource('user', UserController::class);
+            Route::resource('collector', CollectorController::class);
+            Route::resource('tim-explorasi', ExplorationTeamController::class);
+            Route::resource('criteria', CriteriaController::class);
+        });
+
     });
-
-});
-Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
-    Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
-    Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
+    Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
+        Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
+        Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
+    });
 });
 
 require __DIR__.'/auth.php';
