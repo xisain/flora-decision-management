@@ -1,52 +1,38 @@
 <?php
 
 use App\Http\Controllers\Admin\CollectorController;
+use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExplorationTeamController;
 use App\Http\Controllers\Admin\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\peneliti\PenelitiDashboardController;
+use App\Http\Controllers\peneliti\penerimaanTanamanController;
 use App\Http\Middleware\adminMiddleware;
+use App\Http\Middleware\penelitiMiddleware;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
 })->name('home');
+Route::post('/sidebar/toggle', function (Request $request) {
+    $request->session()->put('sidebar_open', $request->input('open'));
 
+    return response()->json(['success' => true]);
+})->name('sidebar.toggle');
 Route::prefix('admin')->middleware([adminMiddleware::class, 'auth'])->group(function () {
-    Route::post('/sidebar/toggle', function (Request $request) {
-        $request->session()->put('sidebar_open', $request->input('open'));
-        return response()->json(['success' => true]);
-    })->name('sidebar.toggle');
-
     Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
-
-    Route::prefix('penerimaan')->group(function () {
-
-    });
-    Route::prefix('penyemaian')->group(function () {
-
-    });
-    Route::prefix('inspeksi')->group(function () {
-
-    });
     Route::prefix('management')->group(function () {
-        Route::resource('user',UserController::class);
-        Route::resource('collector',CollectorController::class);
+        Route::resource('user', UserController::class);
+        Route::resource('collector', CollectorController::class);
         Route::resource('tim-explorasi', ExplorationTeamController::class);
-        // Route::prefix('pengguna')->group(function () {
-        // });
-        // Route::prefix('collector')->group(function () {
-
-        // });
-        // Route::prefix('role')->group(function () {
-
-        // });
-        // Route::prefix('tim')->group(function () {
-
-        // });
+        Route::resource('criteria', CriteriaController::class);
     });
 
 });
+Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
+    Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
+    Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
+});
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

@@ -13,8 +13,8 @@
 
         {{-- Navigation --}}
         <nav class="px-4 py-2 space-y-2">
-            <a href="{{ route('admin.home') }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.home') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ route('peneliti.home') }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.home') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-house" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -24,8 +24,8 @@
             </a>
 
             {{-- Penerimaan --}}
-            <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ Route::has('penerimaan.index') ? route('penerimaan.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -52,44 +52,6 @@
                 <span class="ml-3 transition-opacity duration-200"
                     :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
                     Inspeksi
-                </span>
-            </a>
-            {{-- User --}}
-            <a href="{{ Route::has('user.index') ? route('user.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('user.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-user" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    User
-                </span>
-            </a>
-            {{-- Tim --}}
-            <a href="{{ Route::has('tim-explorasi.index') ? route('tim-explorasi.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('tim-explorasi.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100'}}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-user-group" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Tim
-                </span>
-            </a>
-            <a href="#"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 text-gray-900 hover:bg-gray-100"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-id-badge" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Role
-                </span>
-            </a>
-             <a href="{{ route('criteria.index') }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('criteria.*') ? 'bg-(--flora-teal) text-white font-semibold': 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-cog" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Kriteria & Bobot
                 </span>
             </a>
         </nav>

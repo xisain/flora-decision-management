@@ -13,4 +13,7 @@ class TimExplorasi extends Model
     public function AnggotaTimExplorasi() : HasMany {
         return $this->hasMany(AnggotaTimExplorasi::class, 'exploration_team_id');
     }
+    public function Penerimaan(): HasMany {
+        return $this->hasMany(Penerimaan::class,'exploration_team_id');
+    }
 }
