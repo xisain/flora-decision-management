@@ -11,8 +11,15 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        host: '0.0.0.0',        // 🔥 wajib untuk SSH
+        port: 5173,
+        strictPort: true,
         watch: {
             ignored: ['**/storage/framework/views/**'],
+        },
+        hmr: {
+            host: 'localhost',  // 🔥 fix IPv6 problem
+            protocol: 'ws',
         },
     },
 });

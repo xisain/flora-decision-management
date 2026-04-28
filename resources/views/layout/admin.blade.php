@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html class="h-full bg-gray-100" x-data="{
+<html class="" x-data="{
           sidebarOpen: localStorage.getItem('sidebar_open') !== null ? localStorage.getItem('sidebar_open') === 'true' : true,
-          dropdownOpen: {{ request()->routeIs('admin.category.*') || request()->routeIs('admin.course.*') ? 'true' : 'false' }},
           userOpen: false,
 
           toggleSidebar() {
@@ -42,7 +41,11 @@
 </head>
 
 <body class="h-full flex bg-gray-100" x-cloak>
+    @if (Auth::user()->roles_id == 1)
     @include('components.navigation.admin')
+    @elseif (Auth::user()->roles_id == 3)
+    @include('components.navigation.peneliti')
+    @endif
     <div class="flex-1 flex flex-col min-h-screen sidebar-transition transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-64' : 'ml-20'">
 
         <!-- NAVBAR -->

@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use App\Models\CollectorInfo;
+namespace App\Http\Controllers\Admin;
+use App\Models\Criteria;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CollectorInfoController extends Controller
+class CriteriaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $criteria = Criteria::all();
+        return view('admin.criteria.index',compact('criteria'));
     }
 
     /**
@@ -20,7 +21,7 @@ class CollectorInfoController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.criteria.create');
     }
 
     /**
@@ -28,13 +29,17 @@ class CollectorInfoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        // $validate = $request->validate([
+        //     'nama' => ['required', 'string', 'max:255'],
+        //     'weight' => ['required', 'float']
+        // ]);is
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CollectorInfo $collectorInfo)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +47,7 @@ class CollectorInfoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CollectorInfo $collectorInfo)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +55,7 @@ class CollectorInfoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CollectorInfo $collectorInfo)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +63,7 @@ class CollectorInfoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CollectorInfo $collectorInfo)
+    public function destroy(string $id)
     {
         //
     }
