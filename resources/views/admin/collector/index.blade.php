@@ -101,7 +101,7 @@
                                     {{ $c->initial_collector_name }}
                                 </td>
                                 <td class="px-5 py-3.5">
-                                    {{ $c->last_sequence }}
+                                    {{ count($c->penerimaanTanaman)  }} Tanaman
                                 </td>
                                 <td class="px-5 py-3.5">
                                     <div

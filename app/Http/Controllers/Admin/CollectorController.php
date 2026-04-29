@@ -16,7 +16,7 @@ class CollectorController extends Controller
      */
     public function index()
     {
-        $collector = CollectorInfo::paginate(15);
+        $collector = CollectorInfo::with('PenerimaanTanaman')->paginate(15);
 
         return view('admin.collector.index', compact('collector'));
     }
