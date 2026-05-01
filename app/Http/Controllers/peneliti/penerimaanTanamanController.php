@@ -7,6 +7,9 @@ use App\Models\AnggotaTimExplorasi;
 use App\Models\CollectorInfo;
 use App\Models\legalDocuments;
 use App\Models\Penerimaan;
+use App\Models\PenerimaanTanaman;
+use App\Models\Tanaman;
+use App\Models\TanamanInfo;
 use App\Models\TimExplorasi;
 use App\Services\peneliti\penerimaan\nomorAksesService;
 use Illuminate\Http\Request;
@@ -23,24 +26,23 @@ class penerimaanTanamanController extends Controller
     public function index(Request $request)
     {
         $penerimaan = Penerimaan::with(['penerimaanTanaman', 'user'])
+            ->when($request->penerimaan_dari, function ($q, $dari) {
+                $q->whereDate('tanggal_penerimaan', '>=', $dari);
+            })
+            ->when($request->penerimaan_sampai, function ($q, $sampai) {
+                $q->whereDate('tanggal_penerimaan', '<=', $sampai);
+            })
+            ->when($request->eksplorasi_dari, function ($q, $dari) {
+                $q->whereDate('tanggal_explorasi', '>=', $dari);
+            })
+            ->when($request->eksplorasi_sampai, function ($q, $sampai) {
+                $q->whereDate('tanggal_explorasi', '<=', $sampai);
+            })
+            ->latest('tanggal_penerimaan')
+            ->paginate(15)
+            ->withQueryString();
 
-        ->when($request->penerimaan_dari, function ($q, $dari) {
-            $q->whereDate('tanggal_penerimaan', '>=', $dari);
-        })
-        ->when($request->penerimaan_sampai, function ($q, $sampai) {
-            $q->whereDate('tanggal_penerimaan', '<=', $sampai);
-        })
-        ->when($request->eksplorasi_dari, function ($q, $dari) {
-            $q->whereDate('tanggal_explorasi', '>=', $dari);
-        })
-        ->when($request->eksplorasi_sampai, function ($q, $sampai) {
-            $q->whereDate('tanggal_explorasi', '<=', $sampai);
-        })
-        ->latest('tanggal_penerimaan')
-        ->paginate(15)
-        ->withQueryString(); // ✅ agar parameter filter ikut di link pagination
-
-    return view('peneliti.penerimaan.index', compact('penerimaan'));
+        return view('peneliti.penerimaan.index', compact('penerimaan'));
 
         return view('peneliti.penerimaan.index', compact('penerimaan'));
     }
@@ -143,14 +145,42 @@ class penerimaanTanamanController extends Controller
                 'path_file' => $path,
             ]);
         }
+        // edit dari sini
         $nomorAkses = $this->nas->generateBatch('BB', count($validate['tanaman']));
-        $tanaman = collect($validate['tanaman'])->map(function ($item, $index) use ($nomorAkses) {
-            $item['nomor_akses'] = $nomorAkses[$index];
-
-            return $item;
-        })->toArray();
-        $penerimaan->penerimaanTanaman()->createMany($tanaman);
-
+        DB::transaction(function () use ($validate, $penerimaan, $nomorAkses) {
+            foreach ($validate['tanaman'] as $index => $t) {
+                // dd($validate);
+                $tanamanInfo = TanamanInfo::firstOrCreate(
+                    [
+                        'scientific_name' => $t['scientific_name'],
+                        'author_name' => $t['author_name'],
+                    ], [
+                        'nama_lokal' => $t['nama_lokal'] ?? null,
+                        'marga' => $t['marga'] ?? null,
+                        'marga_jenis' => $t['marga_jenis'] ?? null,
+                        'suku' => $t['suku'] ?? null,
+                        'spesies' => $t['spesies'] ?? null,
+                        'locality' => $t['locality'] ?? null,
+                        'vak_no' => $t['vak_no'] ?? null,
+                    ]);
+                    // dd($tanamanInfo); data keluar
+                $tanamanPenerimaan = PenerimaanTanaman::create([
+                    'penerimaan_id' => $penerimaan->id,
+                    'tanaman_info_id' => $tanamanInfo->id,
+                    'nomor_akses' => $nomorAkses[$index],
+                    'jumlah_material' => $t['jumlah_material'],
+                    'collector_id'=> $t['collector_id'],
+                ]);
+                // dd($tanamanPenerimaan->id); data keluar
+                for ($i = 1; $i <= ($t['jumlah_material'] ?? 1); $i++) {
+                    // dd($tanamanPenerimaan->id);
+                    Tanaman::create([
+                        'tanaman_penerimaan_id' => $tanamanPenerimaan->id,
+                        'nomor_urut' => $i,
+                    ]);
+                }
+            }
+        });
         return redirect()->route('peneliti.penerimaan.index')->with('success', 'Penerimaan Berhasil Dibuat');
 
     }
@@ -160,7 +190,7 @@ class penerimaanTanamanController extends Controller
      */
     public function show(string $id)
     {
-        $data = Penerimaan::with(['penerimaanTanaman', 'legalDocument', 'TimExplorasi', 'User'])->find($id);
+        $data = Penerimaan::with(['penerimaanTanaman.TanamanInfo', 'legalDocument', 'TimExplorasi', 'User'])->find($id);
 
         return view('peneliti.penerimaan.show', compact('data'));
     }

@@ -165,8 +165,8 @@
                         <thead>
                             <tr class="bg-[#f0f7f2]">
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">No.</th>
-                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Scientific Name</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Nomor Akses</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Scientific Name</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Nama Lokal</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Suku</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Jumlah</th>
@@ -183,25 +183,25 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3">
-                                    <div>
-                                        <p class="font-semibold italic text-[#1a3a2a]">{{ $tanaman->scientific_name }}</p>
-                                        <p class="text-xs text-[#8aaa98]">{{ $tanaman->author_name }}</p>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3">
                                     <span class="rounded-md bg-[#e8f4ec] px-2 py-1 text-xs font-mono font-semibold text-[#2d6a4f]">
                                         {{ $tanaman->nomor_akses }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 font-medium text-[#1a3a2a]">{{ $tanaman->nama_lokal }}</td>
-                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->suku }}</td>
+                                <td class="px-4 py-3">
+                                    <div>
+                                        <p class="font-semibold italic text-[#1a3a2a]">{{ $tanaman->tanamanInfo->scientific_name }}</p>
+                                        <p class="text-xs text-[#8aaa98]">{{ $tanaman->author_name }}</p>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 font-medium text-[#1a3a2a]">{{ $tanaman->tanamanInfo->nama_lokal }}</td>
+                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->tanamanInfo->suku }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center gap-1 font-semibold text-[#1a3a2a]">
                                         {{ $tanaman->jumlah_material }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-xs font-mono text-[#5a7a6a]">{{ $tanaman->vak_no }}</td>
-                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->locality }}</td>
+                                <td class="px-4 py-3 text-xs font-mono text-[#5a7a6a]">{{ $tanaman->tanamanInfo->vak_no }}</td>
+                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->tanamanInfo->locality }}</td>
                             </tr>
                             @endforeach
                         </tbody>

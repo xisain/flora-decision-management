@@ -72,7 +72,7 @@ class ExplorationTeamController extends Controller
             foreach ($validate['anggota'] as $anggota) {
                 $tim->AnggotaTimExplorasi()->create([
                     'collector_id' => $anggota['collector_id'],
-                    'peran' => $anggota['peran'],
+                    'Peran' => $anggota['peran'],
                 ]);
             }
         });

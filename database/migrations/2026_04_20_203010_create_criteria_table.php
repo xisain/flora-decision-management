@@ -25,7 +25,7 @@ return new class extends Migration
         Schema::create('ordinal_scales', function (Blueprint $table){
             $table->id();
             $table->foreignId('criteria_id')->constrained('criteria')->cascadeOnDelete();
-            $table->varchar('label');
+            $table->string('label');
             $table->integer('value');
             $table->integer('position');
             $table->string('description');
