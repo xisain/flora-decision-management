@@ -72,7 +72,8 @@ class CollectorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $find = CollectorInfo::with('penerimaanTanaman')->find($id);
+        return view('admin.collector.show',compact('find'));
     }
 
     /**

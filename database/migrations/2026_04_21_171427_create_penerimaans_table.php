@@ -24,11 +24,9 @@ return new class extends Migration
             $table->foreignId('exploration_team_id')->nullable()->constrained('exploration_team');
             $table->timestamps();
         });
-        Schema::create('tanaman_penerimaans', function (Blueprint $table) {
+        Schema::create('tanaman_infos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('penerimaan_id')->nullable()->constrained('penerimaans')->nullOnDelete();
             $table->string('scientific_name');
-            $table->string('nomor_akses');
             $table->string('nama_lokal');
             $table->string('marga');
             $table->string('marga_jenis');
@@ -36,11 +34,34 @@ return new class extends Migration
             $table->string('spesies');
             $table->string('author_name');
             $table->string('locality');
-            $table->string('jumlah_material');
             $table->string('vak_no');
+            $table->timestamps();
+        });
+        Schema::create('tanaman_penerimaans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('penerimaan_id')->nullable()->constrained('penerimaans')->nullOnDelete();
+            $table->string('jumlah_material');
+            $table->string('nomor_akses')->unique();
+            $table->foreignId('tanaman_info_id')->constrained('tanaman_infos')->cascadeOnDelete();
             $table->foreignId('collector_id')->nullable()->constrained('collector_infos')->nullOnDelete();
             $table->timestamps();
         });
+        Schema::create('tanaman', function (Blueprint $table): void {
+            $table->id();
+            $table->foreignId('tanaman_penerimaan_id')->constrained('tanaman_penerimaans');
+            $table->integer('nomor_urut');
+            $table->timestamps();
+        });
+        // Schema::create('tanaman_status_logs', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('tanaman_id')->constrained('tanaman')->cascadeOnDelete();
+        //     $table->enum('stage', ['penyemaian', 'checkup', 'aklimatisasi', 'siap_tanam']);
+        //     $table->enum('status', ['hidup', 'mati', 'recovery', 'dormant']);
+        //     $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+        //     $table->text('catatan')->nullable();
+        //     $table->timestamp('tanggal_proses');
+        //     $table->timestamps();
+        // });
 
     }
 
@@ -49,7 +70,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penerimaans');
+        // Schema::dropIfExists('tanaman_status_logs');
+        Schema::dropIfExists('tanaman');
         Schema::dropIfExists('tanaman_penerimaans');
+        Schema::dropIfExists('tanaman_infos');
+        Schema::dropIfExists('penerimaans');
     }
 };
