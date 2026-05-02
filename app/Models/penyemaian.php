@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable('tanggal_semai','lokasi_semai','user_id','catatan')]
+#[Table('penyemaian')]
 class penyemaian extends Model
 {
     public function user() : BelongsTo {

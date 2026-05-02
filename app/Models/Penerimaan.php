@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable('user_id','tanggal_explorasi','jenis_form','tanggal_penerimaan','tempat_asal','country','source','native', 'exploration_team_id')]
+
 class Penerimaan extends Model
 {
     public function penerimaanTanaman() : HasMany {
