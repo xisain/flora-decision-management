@@ -17,4 +17,7 @@ class PenerimaanTanaman extends Model
     public function TanamanInfo() : BelongsTo {
         return $this->belongsTo(TanamanInfo::class,);
     }
+    public function Tanaman(): HasMany {
+        return $this->hasMany(Tanaman::class,);
+    }
 }

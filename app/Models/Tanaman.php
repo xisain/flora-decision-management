@@ -15,6 +15,11 @@ class Tanaman extends Model
         return $this->belongsTo(PenerimaanTanaman::class);
     }
 
+    public function penyemaianTanaman()
+    {
+        return $this->hasMany(PenyemaianTanaman::class, 'tanaman_id');
+    }
+
     public function getNomorAksesAttribute(): string
     {
         return $this->tanamanPenerimaan->nomor_akses.'-'.$this->nomor_urut;

@@ -9,6 +9,7 @@ use App\Http\Controllers\peneliti\PenelitiDashboardController;
 use App\Http\Controllers\peneliti\penerimaanTanamanController;
 use App\Http\Middleware\adminMiddleware;
 use App\Http\Middleware\penelitiMiddleware;
+use App\Http\Controllers\peneliti\penyemaianTanamanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
         Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
         Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
+        Route::resource('penyemaian',PenyemaianTanamanController::class)->names('peneliti.penyemaian');
     });
 });
 
