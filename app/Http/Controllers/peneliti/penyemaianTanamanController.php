@@ -26,7 +26,7 @@ class penyemaianTanamanController extends Controller
      */
     public function create()
     {
-        $tanaman = Tanaman::with(['tanamanPenerimaan.tanamanInfo'])->get();
+        $tanaman = Tanaman::with(['tanamanPenerimaan.tanamanInfo'])->whereDoesntHave('penyemaianTanaman')->get();
 
         $grouped = $tanaman->groupBy('tanamanPenerimaan.nomor_akses');
 

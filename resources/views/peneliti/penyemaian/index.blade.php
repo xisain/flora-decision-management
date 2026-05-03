@@ -1,6 +1,6 @@
 @extends('layout.admin')
 @section('content')
-    {{ $data }}
+
     <div class="px-4 py-6 mx-auto">
         <div class="flex items-center justify-between mb-6">
             <div>

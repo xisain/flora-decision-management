@@ -36,7 +36,7 @@
 
             {{-- Penyemaian --}}
             <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
