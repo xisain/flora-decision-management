@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
-#[Fillable('penyemaian_id','tanaman_id','status')]
-#[Table('penyemaian_tanaman')]
-class PenyemaianTanaman extends Model
+#[Fillable('inspeksi_id','tanaman_id','status','catatan')]
+#[Table('inspeksi_tanaman')]
+class InspeksiTanaman extends Model
 {
-    public function penyemaian() {
-        return $this->belongsTo(penyemaian::class);
+    public function inspeksi() {
+        return $this->belongsTo(Inspeksi::class);
     }
-    public function tanaman() {
+    public function tanaman(){
         return $this->belongsTo(Tanaman::class);
     }
 }

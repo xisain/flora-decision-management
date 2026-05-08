@@ -1,6 +1,5 @@
 @extends('layout.admin')
 @section('content')
-
     <div class="px-4 py-6 mx-auto">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -89,25 +88,29 @@
                                 <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $p->user->name }}</td>
                                 <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $p->catatan }}</td>
                                 <td class="px-5 py-3.5">
-                                    <div class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                                    <a href="{{ route('peneliti.penyemaian.show', $p->id) }}" title="Detail"
-                                        class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
-                                        <i class="fa-solid fa-eye text-xs"></i>
-                                    </a>
-                                    <a href="{{ route('peneliti.penyemaian.edit', $p->id) }}" title="Edit"
-                                        class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
-                                        <i class="fa-solid fa-pen text-xs"></i>
-                                    </a>
-                                    <form method="POST" action="{{ route('peneliti.penyemaian.destroy', $p->id) }}" class="form-delete">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="delete_tanaman_penyemaian" value="0" class="delete-peneriaam-tanaman">
-                                        <input type="hidden" name="penyemaian_id" value="{{ $p->id }}">
-                                        <button type="submit" class="btn-delete p-1.5 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
-                                            <i class="fa-solid fa-trash text-xs"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                    <div
+                                        class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                        <a href="{{ route('peneliti.penyemaian.show', $p->id) }}" title="Detail"
+                                            class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
+                                            <i class="fa-solid fa-eye text-xs"></i>
+                                        </a>
+                                        <a href="{{ route('peneliti.penyemaian.edit', $p->id) }}" title="Edit"
+                                            class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                                            <i class="fa-solid fa-pen text-xs"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('peneliti.penyemaian.destroy', $p->id) }}"
+                                            class="form-delete">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="delete_tanaman_penyemaian" value="0"
+                                                class="delete-peneriaam-tanaman">
+                                            <input type="hidden" name="penyemaian_id" value="{{ $p->id }}">
+                                            <button type="submit"
+                                                class="btn-delete p-1.5 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                                <i class="fa-solid fa-trash text-xs"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
 
                             </tr>

@@ -45,8 +45,8 @@
                 </span>
             </a>
 
-            <a href="#"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 text-gray-900 hover:bg-gray-100"
+            <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
