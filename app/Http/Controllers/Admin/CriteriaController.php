@@ -1,19 +1,28 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Models\Criteria;
+
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\CriteriaCreateRequest;
+use App\Http\Requests\admin\CriteriaUpdateRequest;
+use App\Models\Criteria;
+use App\Services\admin\CriteriaCreateService;
+use App\Services\admin\CriteriaUpdateService;
 use Illuminate\Http\Request;
 
 class CriteriaController extends Controller
 {
+    public function __construct(private CriteriaCreateService $criteriaCreateService, private CriteriaUpdateService $criteriaUpdateService) {
+
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $criteria = Criteria::all();
-        return view('admin.criteria.index',compact('criteria'));
+
+        return view('admin.criteria.index', compact('criteria'));
     }
 
     /**
@@ -27,13 +36,13 @@ class CriteriaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CriteriaCreateRequest $request)
     {
-        dd($request->all());
-        // $validate = $request->validate([
-        //     'nama' => ['required', 'string', 'max:255'],
-        //     'weight' => ['required', 'float']
-        // ]);is
+        $this->criteriaCreateService->store($request);
+
+        return redirect()
+            ->route('criteria.index')
+            ->with('success', 'Kriteria berhasil ditambahkan.');
     }
 
     /**
@@ -49,15 +58,20 @@ class CriteriaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $criteria = Criteria::findOrFail($id);
+        return view('admin.criteria.edit',compact('criteria'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CriteriaUpdateRequest $request, string $id)
     {
-        //
+        // dd($request->all());
+        $criteria = Criteria::findOrFail($id);
+        $this->criteriaUpdateService->update($request,$criteria);
+        return redirect()->route('criteria.index')->with('success','criteria berhasil di update');
+
     }
 
     /**
@@ -65,6 +79,9 @@ class CriteriaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $criteria = Criteria::findOrFail($id);
+        $criteria->ordinals()->delete();
+        $criteria->delete();
+        return redirect()->route('criteria.index')->with('success', 'Criteria Berhasil Di hapus');
     }
 }

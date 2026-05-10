@@ -31,7 +31,7 @@ return new class extends Migration
         Schema::create('tanaman_status_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tanaman_id')->constrained('tanaman')->cascadeOnDelete();
-            $table->enum('stage', ['penyemaian', 'checkup', 'aklimatisasi', 'siap_tanam']);
+            $table->enum('stage',['penyemaian','checkup','labeling','aklimatisasi','evaluasi','siap_tanam']);
             $table->enum('status', ['hidup', 'mati', 'recovery', 'dormant']);
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('catatan')->nullable();

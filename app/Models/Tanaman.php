@@ -19,9 +19,13 @@ class Tanaman extends Model
     {
         return $this->hasMany(PenyemaianTanaman::class, 'tanaman_id');
     }
+    public function inspeksiTanaman()
+    {
+        return $this->hasMany(InspeksiTanaman::class, 'tanaman_id');
+    }
 
     public function getNomorAksesAttribute(): string
     {
-        return $this->tanamanPenerimaan->nomor_akses.'-'.$this->nomor_urut;
+        return $this->tanamanPenerimaan->nomor_akses.'-'.str_pad($this->nomor_urut, 3, '0', STR_PAD_LEFT);
     }
 }

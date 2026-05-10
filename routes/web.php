@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExplorationTeamController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\peneliti\inspeksiTanamanController;
 use App\Http\Controllers\peneliti\PenelitiDashboardController;
 use App\Http\Controllers\peneliti\penerimaanTanamanController;
 use App\Http\Middleware\adminMiddleware;
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
         Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
         Route::resource('penyemaian',PenyemaianTanamanController::class)->names('peneliti.penyemaian');
+        Route::resource('inspeksi', inspeksiTanamanController::class)->names('peneliti.inspeksi');
     });
 });
 
