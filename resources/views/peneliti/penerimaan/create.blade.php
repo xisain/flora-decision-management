@@ -568,6 +568,14 @@
                                                 x-model="tanaman.jumlah_material" placeholder="0" min="0"
                                                 class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--flora-teal)]/30 focus:border-[var(--flora-teal)] transition-colors">
                                         </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-500 mb-1.5">Tipe Tanaman</label>
+                                            <select  x-model="tanaman.tipe_tanaman" :name="`tanaman[${index}][tipe_tanaman]`" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--flora-teal)]/30 focus:border-[var(--flora-teal)] transition-colors bg-white">
+                                                <option value="">Pilih Tipe Tanaman</option>
+                                                <option value="tree">Pohon</option>
+                                                <option value="shrub">Semak</option>
+                                            </select>
+                                        </div>
 
                                         <div>
                                             <label class="block text-xs font-medium text-gray-500 mb-1.5">VAK No</label>
@@ -699,6 +707,9 @@
                                                 class="px-2 py-2.5 text-left font-semibold text-gray-400 uppercase tracking-wide min-w-[80px]">
                                                 VAK No</th>
                                             <th
+                                                class="px-2 py-2.5 text-left font-semibold text-gray-400 uppercase tracking-wide min-w-[80px]">
+                                                Tipe Tanaman</th>
+                                            <th
                                                 class="px-2 py-2.5 text-left font-semibold text-gray-400 uppercase tracking-wide min-w-[120px]">
                                                 Collector</th>
                                             <th class="px-2 py-2.5 w-8"></th>
@@ -767,6 +778,11 @@
                                                 <td class="px-1 py-1">
                                                     <input type="text" :name="`tanaman[${index}][vak_no]`"
                                                         x-model="tanaman.vak_no"
+                                                        class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-gray-200 focus:border-[var(--flora-teal)] focus:ring-1 focus:ring-[var(--flora-teal)]/30 focus:outline-none text-gray-700 bg-transparent focus:bg-white transition-all text-xs">
+                                                </td>
+                                                <td class="px-1 py-1">
+                                                    <input type="text" :name="`tanaman[${index}][tipe_tanaman]`"
+                                                        x-model="tanaman.tipe_tanaman"
                                                         class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-gray-200 focus:border-[var(--flora-teal)] focus:ring-1 focus:ring-[var(--flora-teal)]/30 focus:outline-none text-gray-700 bg-transparent focus:bg-white transition-all text-xs">
                                                 </td>
 
@@ -992,6 +1008,7 @@
                             locality: '',
                             jumlah_material: '',
                             vak_no: '',
+                            tipe_tanaman:'',
                             collector_id: '',
                             collector_initial: ''
                         });
@@ -1024,6 +1041,7 @@
                                 range: range, // gunakan range yang sudah di-decode
                             });
 
+
                             this.tanamanList = json.map(row => ({
                                 scientific_name: row['scientific_name'] || '',
                                 nomor_akses: '',
@@ -1036,6 +1054,7 @@
                                 locality: row['locality'] || '',
                                 jumlah_material: row['jumlah_material'] || '',
                                 vak_no: row['vak_no'] || '',
+                                tipe_tanaman: row['tipe_tanaman'] || '',
                                 collector_id: '',
                                 collector_initial: row['collector_initial'] || '',
                             }));

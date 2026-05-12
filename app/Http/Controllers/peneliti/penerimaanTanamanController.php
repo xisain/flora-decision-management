@@ -97,6 +97,7 @@ class penerimaanTanamanController extends Controller
             'tanaman.*.locality' => ['nullable', 'string', 'max:255'],
             'tanaman.*.jumlah_material' => ['nullable', 'integer', 'min:1'],
             'tanaman.*.vak_no' => ['nullable', 'string', 'max:255'],
+            'tanaman.*.tipe_tanaman'=> ['required', 'string','in:tree,shrub'],
             'tanaman.*.collector_id' => ['nullable', 'exists:collector_infos,id'],
             'tanaman.*.collector_initial' => ['nullable', 'string', 'max:50'],
 
@@ -166,6 +167,7 @@ class penerimaanTanamanController extends Controller
                     'tanaman_info_id' => $tanamanInfo->id,
                     'nomor_akses' => $nomorAkses[$index],
                     'jumlah_material' => $t['jumlah_material'],
+                    'habitus' => $t['tipe_tanaman'],
                     'collector_id'=> $t['collector_id'],
                     'locality' => $t['locality'] ?? null,
                     'vak_no' => $t['vak_no'] ?? null,
@@ -190,7 +192,6 @@ class penerimaanTanamanController extends Controller
     public function show(string $id)
     {
         $data = Penerimaan::with(['penerimaanTanaman.TanamanInfo', 'legalDocument', 'TimExplorasi', 'User'])->find($id);
-
         return view('peneliti.penerimaan.show', compact('data'));
     }
 

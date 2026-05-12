@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Table('tanaman_penerimaans')]
-#[Fillable('penerimaan_id','nomor_akses','jumlah_material','tanaman_info_id','collector_id','locality','vak_no',)]
+#[Fillable('penerimaan_id','nomor_akses','jumlah_material','tanaman_info_id','habitus','collector_id','locality','vak_no',)]
 class PenerimaanTanaman extends Model
 {
     public function collector() : BelongsTo {

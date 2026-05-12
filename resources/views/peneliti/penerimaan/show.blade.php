@@ -170,6 +170,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Nama Lokal</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Suku</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Jumlah</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Tipe Tanaman</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Vak No.</th>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#5a7a6a]">Locality</th>
                             </tr>
@@ -200,8 +201,9 @@
                                         {{ $tanaman->jumlah_material }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-xs font-mono text-[#5a7a6a]">{{ $tanaman->tanamanInfo->vak_no }}</td>
-                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->tanamanInfo->locality }}</td>
+                                <td class="px-4 py-3 text-xs font-mono text-[#5a7a6a]">{{ $tanaman->habitus }}</td>
+                                <td class="px-4 py-3 text-xs font-mono text-[#5a7a6a]">{{ $tanaman->vak_no }}</td>
+                                <td class="px-4 py-3 text-[#5a7a6a]">{{ $tanaman->locality }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -41,6 +41,7 @@ return new class extends Migration
             $table->foreignId('penerimaan_id')->nullable()->constrained('penerimaans')->nullOnDelete();
             $table->string('jumlah_material');
             $table->string('nomor_akses')->unique();
+            $table->enum('habitus',['tree','shrub']);
             $table->foreignId('tanaman_info_id')->constrained('tanaman_infos')->cascadeOnDelete();
             $table->foreignId('collector_id')->nullable()->constrained('collector_infos')->nullOnDelete();
             $table->string('locality');
