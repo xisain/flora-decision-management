@@ -43,6 +43,25 @@
                 ];
             })
             ->values();
+        $criteriaData = $criteria
+            ->map(
+                fn($c) => [
+                    'id' => $c->id,
+                    'nama_kriteria' => $c->nama_criteria,
+                    'skala' => $c->skala,
+                    'satuan' => $c->satuan,
+                    'ordinals' => $c->ordinals
+                        ->map(
+                            fn($o) => [
+                                'id' => $o->id,
+                                'label' => $o->label,
+                                'nilai' => $o->nilai,
+                            ],
+                        )
+                        ->values(),
+                ],
+            )
+            ->values();
     @endphp
     <div class="px-4 py-6 mx-auto">
         <div class="flex items-center justify-between mb-6">
@@ -477,86 +496,184 @@
                     </div>
 
                     {{-- STEP 2 --}}
+                    {{-- STEP 2 --}}
                     <div x-show="currentStep === 2" x-transition>
                         <div class="mb-4">
-                            <h2 class="text-lg font-semibold text-[var(--flora-moss)]">
-                                Data Tanaman Terpilih
-                            </h2>
-                            <p class="text-sm text-gray-500">
-                                Tanaman yang akan diproses inspeksi
-                            </p>
+                            <h2 class="text-lg font-semibold text-[var(--flora-moss)]">Data Tanaman Terpilih</h2>
+                            <p class="text-sm text-gray-500">Tanaman yang akan diproses inspeksi</p>
                         </div>
-                        <div class="space-y-3">
-                            <template x-for="plant in selectedPlants" :key="plant.id">
-                                <div class="border border-gray-200 rounded-2xl p-5 space-y-5">
-                                    <div class="flex items-start justify-between gap-5">
-                                        <div>
-                                            <h3 class="font-semibold text-gray-800" x-text="plant.nomor_akses">
-                                            </h3>
-                                            <p class="text-sm text-gray-500" x-text="plant.scientific_name">
-                                            </p>
-                                            <p class="text-sm text-gray-500" x-text="plant.author_name">
-                                            </p>
+
+
+                        <template x-if="selectedStage === 'evaluasi'">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Nilai Kriteria
+                                </p>
+                                <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+                                    <table class="w-full text-sm border-collapse"
+                                        style="min-width:900px;table-layout:fixed">
+                                        <thead>
+                                            <tr class="bg-gray-50 border-b border-gray-200">
+                                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase
+                                       sticky left-0 bg-gray-50 z-10"
+                                                    style="width:160px">
+                                                    Tanaman
+                                                </th>
+                                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase"
+                                                    style="width:110px">
+                                                    Status
+                                                </th>
+                                                <template x-for="kriteria in criteriaList" :key="kriteria.id">
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase"
+                                                        style="width:120px">
+                                                        <span x-text="kriteria.nama_kriteria"></span>
+                                                        <span
+                                                            class="block text-[10px] font-normal text-gray-400 normal-case mt-0.5"
+                                                            x-text="kriteria.skala + (kriteria.satuan ? ' · ' + kriteria.satuan : '')">
+                                                        </span>
+                                                    </th>
+                                                </template>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100">
+
+                                            <template x-for="plant in selectedPlants" :key="plant.id">
+                                                <tr class="hover:bg-gray-50 transition">
+                                                    <td
+                                                        class="px-4 py-3 sticky left-0 bg-white z-10 border-r border-gray-100">
+                                                        <p class="font-mono text-xs font-medium text-[var(--flora-moss)]"
+                                                            x-text="plant.nomor_akses"></p>
+                                                        <p class="text-xs text-gray-500 italic mt-0.5"
+                                                            x-text="plant.scientific_name"></p>
+                                                        <input type="hidden" :name="`plants[${plant.id}][id]`"
+                                                            :value="plant.id">
+                                                    </td>
+                                                    <td class="px-4 py-3">
+                                                        <select x-model="plant.status"
+                                                            :name="`plants[${plant.id}][status]`"
+                                                            class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs
+                                               focus:outline-none focus:ring-2 focus:ring-[var(--flora-moss)]
+                                               focus:border-transparent bg-white">
+                                                            <option value="">-- pilih --</option>
+                                                            <option value="hidup">Hidup</option>
+                                                            <option value="mati">Mati</option>
+                                                            <option value="recovery">Recovery</option>
+                                                            <option value="dormant">Dormant</option>
+                                                        </select>
+                                                    </td>
+                                                    <template x-for="kriteria in criteriaList" :key="kriteria.id">
+                                                        <td class="px-4 py-3">
+                                                            <template x-if="kriteria.skala === 'numerik'">
+                                                                <div>
+                                                                    <input type="number"
+                                                                        :name="`plants[${plant.id}][kriteria][${kriteria.id}][nilai]`"
+                                                                        x-model="plant.nilai_kriteria[kriteria.id]"
+                                                                        :placeholder="kriteria.satuan ?? '0'"
+                                                                        class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs ...">
+                                                                    {{-- ← tambah hidden skala --}}
+                                                                    <input type="hidden"
+                                                                        :name="`plants[${plant.id}][kriteria][${kriteria.id}][skala]`"
+                                                                        value="numerik">
+                                                                </div>
+                                                            </template>
+                                                            <template x-if="kriteria.skala === 'ordinal'">
+                                                                <div>
+                                                                    <select
+                                                                        :name="`plants[${plant.id}][kriteria][${kriteria.id}][nilai]`"
+                                                                        x-model="plant.nilai_kriteria[kriteria.id]"
+                                                                        class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs ...">
+                                                                        <option value="">-- pilih --</option>
+                                                                        <template x-for="ordinal in kriteria.ordinals"
+                                                                            :key="ordinal.id">
+                                                                            <option :value="ordinal.id"
+                                                                                x-text="ordinal.label + ' (' + ordinal.nilai + ')'">
+                                                                            </option>
+                                                                        </template>
+                                                                    </select>
+                                                                    {{-- ← tambah hidden skala --}}
+                                                                    <input type="hidden"
+                                                                        :name="`plants[${plant.id}][kriteria][${kriteria.id}][skala]`"
+                                                                        value="ordinal">
+                                                                </div>
+                                                            </template>
+                                                        </td>
+                                                    </template>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <input type="hidden" name="stage" :value="selectedStage">
+                            </div>
+                        </template>
+
+
+                        <template x-if="selectedStage !== 'evaluasi'">
+                            <div class="space-y-3">
+                                <template x-for="plant in selectedPlants" :key="plant.id">
+                                    <div class="border border-gray-200 rounded-2xl p-5 space-y-5">
+                                        <div class="flex items-start justify-between gap-5">
+                                            <div>
+                                                <h3 class="font-semibold text-gray-800" x-text="plant.nomor_akses"></h3>
+                                                <p class="text-sm text-gray-500 italic" x-text="plant.scientific_name">
+                                                </p>
+                                                <p class="text-sm text-gray-500" x-text="plant.author_name"></p>
+                                            </div>
+                                            <div class="w-52">
+                                                <label class="block text-sm mb-1">Status</label>
+                                                <select x-model="plant.status" :name="`plants[${plant.id}][status]`"
+                                                    class="w-full border rounded-xl px-3 py-2">
+                                                    <option value="">Pilih Status</option>
+                                                    <option value="hidup">Hidup</option>
+                                                    <option value="mati">Mati</option>
+                                                    <option value="recovery">Recovery</option>
+                                                    <option value="dormant">Dormant</option>
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        {{-- STATUS --}}
-                                        <div class="w-52">
-                                            <label class="block text-sm mb-1">
-                                                Status
-                                            </label>
-                                            <select x-model="plant.status" :name="`plants[${plant.id}][status]`"
-                                                class="w-full border rounded-xl px-3 py-2">
-                                                <option value="">Pilih Status</option>
-                                                <option value="hidup">Hidup</option>
-                                                <option value="mati">Mati</option>
-                                                <option value="recovery">Recovery</option>
-                                                <option value="dormant">Dormant</option>
-                                            </select>
-                                        </div>
+                                        {{-- CHECKUP --}}
+                                        <template x-if="selectedStage === 'checkup'">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm mb-1">Label Tanaman</label>
+                                                    <input type="text" :name="`plants[${plant.id}][label]`"
+                                                        class="w-full border rounded-xl px-3 py-2">
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        {{-- LABELING --}}
+                                        <template x-if="selectedStage === 'labeling'">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm mb-1">Konfirmasi Label</label>
+                                                    <select :name="`plants[${plant.id}][label_confirmed]`"
+                                                        class="w-full border rounded-xl px-3 py-2">
+                                                        <option value="">-- pilih --</option>
+                                                        <option value="1">Sudah Ditempel</option>
+                                                        <option value="0">Belum</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        {{-- AKLIMATISASI --}}
+                                        <template x-if="selectedStage === 'aklimatisasi'">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm mb-1">Nomor Polybag</label>
+                                                    <input type="text" :name="`plants[${plant.id}][polybag]`"
+                                                        class="w-full border rounded-xl px-3 py-2">
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <input type="hidden" :name="`plants[${plant.id}][id]`" :value="plant.id">
                                     </div>
-                                    {{-- CHECKUP --}}
-                                    <template x-if="selectedStage === 'checkup'">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-sm mb-1">
-                                                    Label Tanaman
-                                                </label>
-                                                <input type="text" :name="`plants[${plant.id}][label]`"
-                                                    class="w-full border rounded-xl px-3 py-2">
-                                            </div>
-                                        </div>
-                                    </template>
-                                    {{-- AKLIMATISASI --}}
-                                    <template x-if="selectedStage === 'aklimatisasi'">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-sm mb-1">
-                                                    Nomor Polybag
-                                                </label>
-                                                <input type="text" :name="`plants[${plant.id}][polybag]`"
-                                                    class="w-full border rounded-xl px-3 py-2">
-                                            </div>
-                                        </div>
-                                    </template>
-                                    {{-- EVALUASI --}}
-                                    <template x-if="selectedStage === 'evaluasi'">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-sm mb-1">
-                                                    Tinggi Tanaman
-                                                </label>
-                                                <input type="number" step="0.01"
-                                                    :name="`plants[${plant.id}][tinggi]`"
-                                                    class="w-full border rounded-xl px-3 py-2">
-                                            </div>
-                                        </div>
-                                    </template>
-                                    {{-- HIDDEN --}}
-                                    <input type="hidden" :name="`plants[${plant.id}][id]`" :value="plant.id">
-                                </div>
-                            </template>
-                        </div>
-                        <input type="hidden" name="stage" :value="selectedStage">
+                                </template>
+                                <input type="hidden" name="stage" :value="selectedStage">
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -587,27 +704,19 @@
         <script>
             document.addEventListener('alpine:init', () => {
                 Alpine.data('inspeksiForm', () => ({
-
                     selectedStage: 'checkup',
                     currentStep: 1,
                     selectedPlants: [],
 
-                    // Data per stage (di-render dari Blade ke JS)
-                    stageData: {
-                        checkup: @json($checkupData),
-                        labeling: @json($labelingData),
+                    checkup: @json($checkupData),
+                    labeling: @json($labelingData),
+                    aklimatisasi: @json($AklimatisasiData),
+                    evaluasi: @json($evaluasiData),
+                    criteriaList: @json($criteriaData),
 
-                    },
 
                     get currentStageData() {
-                        return this.stageData[this.selectedStage] ?? []
-                    },
-
-                    changeStage(stage) {
-                        this.selectedStage = stage
-                        this.selectedPlants = []
-                        this.currentStep = 1
-                        this.$nextTick(() => this.syncIndeterminate())
+                        return this[this.selectedStage] ?? []
                     },
 
                     togglePlant(plant) {
@@ -615,27 +724,34 @@
                         if (exists) {
                             this.selectedPlants = this.selectedPlants.filter(p => p.id !== plant.id)
                         } else {
+
+                            const nilaiKriteria = {}
+                            this.criteriaList.forEach(k => {
+                                nilaiKriteria[k.id] = ''
+                            })
                             this.selectedPlants.push({
                                 ...plant,
                                 status: '',
-                                kondisi: '',
-                                catatan: ''
+                                nilai_kriteria: nilaiKriteria,
                             })
                         }
                         this.$nextTick(() => this.syncIndeterminate())
                     },
 
-                    // Select all untuk stage aktif
                     toggleSelectAll(event) {
                         if (event.target.checked) {
                             const current = this.currentStageData
                             current.forEach(plant => {
                                 if (!this.selectedPlants.find(p => p.id === plant.id)) {
+
+                                    const nilaiKriteria = {}
+                                    this.criteriaList.forEach(k => {
+                                        nilaiKriteria[k.id] = ''
+                                    })
                                     this.selectedPlants.push({
                                         ...plant,
                                         status: '',
-                                        kondisi: '',
-                                        catatan: ''
+                                        nilai_kriteria: nilaiKriteria,
                                     })
                                 }
                             })
@@ -649,17 +765,16 @@
 
                     isAllSelected() {
                         const current = this.currentStageData
-                        return current.length > 0 && current.every(p => this.selectedPlants.some(sp => sp
-                            .id === p.id))
+                        return current.length > 0 && current.every(p =>
+                            this.selectedPlants.some(sp => sp.id === p.id))
                     },
 
                     isSomeSelected() {
                         const current = this.currentStageData
-                        return current.some(p => this.selectedPlants.some(sp => sp.id === p.id)) && !this
-                            .isAllSelected()
+                        return current.some(p =>
+                            this.selectedPlants.some(sp => sp.id === p.id)) && !this.isAllSelected()
                     },
 
-                    // Sync indeterminate state (tidak bisa pakai binding biasa)
                     syncIndeterminate() {
                         const el = this.$refs.selectAllCheckbox
                         if (el) el.indeterminate = this.isSomeSelected()
@@ -671,13 +786,19 @@
                         this.$nextTick(() => this.syncIndeterminate())
                     },
 
+                    changeStage(stage) {
+                        this.selectedStage = stage
+                        this.selectedPlants = []
+                        this.currentStep = 1
+                        this.$nextTick(() => this.syncIndeterminate())
+                    },
+
                     nextStep() {
                         this.currentStep++
                     },
-
                     prevStep() {
                         this.currentStep--
-                    }
+                    },
                 }))
             })
         </script>

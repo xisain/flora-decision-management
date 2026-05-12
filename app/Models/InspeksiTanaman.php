@@ -12,6 +12,10 @@ class InspeksiTanaman extends Model
     public function inspeksi() {
         return $this->belongsTo(Inspeksi::class);
     }
+    public function nilaiCriteria()
+    {
+        return $this->hasMany(InspeksiNilaiCriteria::class);
+    }
     public function tanaman(){
         return $this->belongsTo(Tanaman::class);
     }

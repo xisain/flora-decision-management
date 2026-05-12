@@ -43,8 +43,6 @@ class penerimaanTanamanController extends Controller
             ->withQueryString();
 
         return view('peneliti.penerimaan.index', compact('penerimaan'));
-
-        return view('peneliti.penerimaan.index', compact('penerimaan'));
     }
 
     /**
@@ -160,8 +158,7 @@ class penerimaanTanamanController extends Controller
                         'marga_jenis' => $t['marga_jenis'] ?? null,
                         'suku' => $t['suku'] ?? null,
                         'spesies' => $t['spesies'] ?? null,
-                        'locality' => $t['locality'] ?? null,
-                        'vak_no' => $t['vak_no'] ?? null,
+
                     ]);
                     // dd($tanamanInfo); data keluar
                 $tanamanPenerimaan = PenerimaanTanaman::create([
@@ -170,6 +167,8 @@ class penerimaanTanamanController extends Controller
                     'nomor_akses' => $nomorAkses[$index],
                     'jumlah_material' => $t['jumlah_material'],
                     'collector_id'=> $t['collector_id'],
+                    'locality' => $t['locality'] ?? null,
+                    'vak_no' => $t['vak_no'] ?? null,
                 ]);
                 // dd($tanamanPenerimaan->id); data keluar
                 for ($i = 1; $i <= ($t['jumlah_material'] ?? 1); $i++) {

@@ -23,13 +23,12 @@ use Illuminate\Database\Eloquent\Model;
 class Criteria extends Model
 {
     protected $casts = [
-        'bobot'       => 'decimal:2',
-        'param_q'     => 'decimal:4',
-        'param_p'     => 'decimal:4',
+        'bobot' => 'decimal:2',
+        'param_q' => 'decimal:4',
+        'param_p' => 'decimal:4',
         'param_sigma' => 'decimal:4',
-        'is_active'   => 'boolean',
+        'is_active' => 'boolean',
     ];
-
 
     public function ordinals()
     {
@@ -37,6 +36,10 @@ class Criteria extends Model
             ->orderBy('urutan');
     }
 
+    public function inspeksiNilaiCriteria()
+    {
+        return $this->hasMany(InspeksiNilaiCriteria::class);
+    }
 
     public function scopeActive($query)
     {
