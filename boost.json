@@ -1,14 +1,19 @@
 {
     "agents": [
         "copilot",
-        "claude_code"
+        "claude_code",
+        "codex"
     ],
     "guidelines": true,
     "mcp": true,
     "nightwatch_mcp": false,
+    "packages": [
+        "fruitcake/laravel-debugbar"
+    ],
     "sail": false,
     "skills": [
         "laravel-best-practices",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "debug-using-debugbar"
     ]
 }
