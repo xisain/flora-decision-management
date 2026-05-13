@@ -113,6 +113,12 @@
                                 <td class="px-5 py-4 text-gray-700">
                                     {{ $item->user->name }}
                                 </td>
+                                <td>
+                                    <a href="{{ route('peneliti.inspeksi.show', $item->id) }}" title="Detail"
+                                        class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </a>
+                                </td>
                             </tr>
                         @empty
                             <tr class="">

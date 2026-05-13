@@ -27,14 +27,13 @@ return new class extends Migration
         Schema::create('tanaman_infos', function (Blueprint $table) {
             $table->id();
             $table->string('scientific_name');
-            $table->string('nama_lokal');
-            $table->string('marga');
-            $table->string('marga_jenis');
-            $table->string('suku');
-            $table->string('spesies');
-            $table->string('author_name');
-            $table->string('locality');
-            $table->string('vak_no');
+            $table->string('nama_lokal')->nullable();
+            $table->string('marga')->nullable();
+            $table->string('marga_jenis')->nullable();
+            $table->string('suku')->nullable();
+            $table->string('spesies')->nullable();
+            $table->string('author_name')->nullable();
+
             $table->timestamps();
         });
         Schema::create('tanaman_penerimaans', function (Blueprint $table) {
@@ -42,8 +41,11 @@ return new class extends Migration
             $table->foreignId('penerimaan_id')->nullable()->constrained('penerimaans')->nullOnDelete();
             $table->string('jumlah_material');
             $table->string('nomor_akses')->unique();
+            $table->enum('habitus',['tree','shrub']);
             $table->foreignId('tanaman_info_id')->constrained('tanaman_infos')->cascadeOnDelete();
             $table->foreignId('collector_id')->nullable()->constrained('collector_infos')->nullOnDelete();
+            $table->string('locality');
+            $table->string('vak_no');
             $table->timestamps();
         });
         Schema::create('tanaman', function (Blueprint $table): void {

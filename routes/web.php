@@ -8,9 +8,10 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\peneliti\inspeksiTanamanController;
 use App\Http\Controllers\peneliti\PenelitiDashboardController;
 use App\Http\Controllers\peneliti\penerimaanTanamanController;
+use App\Http\Controllers\peneliti\penyemaianTanamanController;
+use App\Http\Controllers\peneliti\ranking\RankingTanamanController;
 use App\Http\Middleware\adminMiddleware;
 use App\Http\Middleware\penelitiMiddleware;
-use App\Http\Controllers\peneliti\penyemaianTanamanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,8 +37,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
         Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
         Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
-        Route::resource('penyemaian',PenyemaianTanamanController::class)->names('peneliti.penyemaian');
+        Route::resource('penyemaian', penyemaianTanamanController::class)->names('peneliti.penyemaian');
+
+        Route::get('inspeksi/editEvaluasi/{id}', [inspeksiTanamanController::class, 'editEvaluasi'])->name('peneliti.inspeksi.editEvaluasi');
+        Route::put('inspeksi/editEvaluasi/{id}', [inspeksiTanamanController::class, 'updateEvaluasi'])->name('peneliti.inspeksi.updateEvaluasi');
+
         Route::resource('inspeksi', inspeksiTanamanController::class)->names('peneliti.inspeksi');
+    });
+    Route::prefix('test')->group(function () {
+        Route::get('/', [RankingTanamanController::class, 'index']);
+        Route::get('/{inspeksi_tanaman_id}', [RankingTanamanController::class, 'findbyInspeksiTanamanId']);
     });
 });
 

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-#[Fillable('scientific_name','nama_lokal','marga','marga_jenis','suku','spesies','author_name','locality','vak_no',)]
+#[Fillable('scientific_name','nama_lokal','marga','marga_jenis','suku','spesies','author_name')]
 class TanamanInfo extends Model
 {
     public function PenerimaanTanaman(){

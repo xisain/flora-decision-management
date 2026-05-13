@@ -31,6 +31,10 @@ class CriteriaOrdinal extends Model
     {
         return $this->belongsTo(Criteria::class, 'criteria_id');
     }
+    public function inspeksiNilaiCriteria()
+    {
+        return $this->hasMany(InspeksiNilaiCriteria::class);
+    }
 
 
     public static function resolveNilai(float $input, int $kriteriaId): ?int

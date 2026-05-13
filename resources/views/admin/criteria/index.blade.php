@@ -95,9 +95,19 @@
                                     </div>
                                 </td>
                             </tr>
-
                         @empty
                         @endforelse
+                        <tr class="bg-gray-50 font-semibold">
+                            <td colspan="2" class="px-5 py-4 text-right text-gray-700">
+                                Total Bobot
+                            </td>
+
+                            <td class="px-5 py-4 text-[var(--flora-moss)]">
+                                {{ $criteria->sum('bobot') }}
+                            </td>
+
+                            <td colspan="3"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
