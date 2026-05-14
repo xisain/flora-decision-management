@@ -16,7 +16,7 @@ class adminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        if ($request->user()->roles->id == 1) {
+        if ($request->user()->roles->name === 'admin') {
             return $next($request);
         } else {
             abort(403, 'Tidak Memiliki Akses');

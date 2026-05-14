@@ -22,14 +22,14 @@ class PrometheeIIService
         if ($n === 1) {
             $alt = $alternatives->first();
 
-            return collect([
+            return collect([[
                 'tanaman_id' => $alt['tanaman_id'],
                 'inspeksi_tanaman_id' => $alt['inspeksi_tanaman_id'],
                 'leaving_flow' => 0.0,
                 'entering_flow' => 0.0,
                 'net_flow' => 0.0,
                 'ranking' => 1,
-            ]);
+            ]]);
         }
 
         $alts = $alternatives->values();

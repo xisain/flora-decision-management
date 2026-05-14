@@ -38,7 +38,7 @@ class inspeksiService
         });
     }
     public function updateEvaluasi(array $nilaiList, string $id){
-        DB::transaction(function () use ($nilaiList,$id){
+        return DB::transaction(function () use ($nilaiList,$id){
             $inspeksi = InspeksiTanaman::findOrFail($id);
             $inspeksiId = $inspeksi->inspeksi_id;
             foreach ($nilaiList as $item) {

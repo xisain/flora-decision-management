@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable('tanaman_penerimaan_id', 'nomor_urut')]
 #[Table('tanaman')]
 class Tanaman extends Model
 {
+    use HasFactory;
+
     public function tanamanPenerimaan()
     {
         return $this->belongsTo(PenerimaanTanaman::class);
@@ -19,6 +22,7 @@ class Tanaman extends Model
     {
         return $this->hasMany(PenyemaianTanaman::class, 'tanaman_id');
     }
+
     public function inspeksiTanaman()
     {
         return $this->hasMany(InspeksiTanaman::class, 'tanaman_id');
