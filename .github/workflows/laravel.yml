@@ -40,22 +40,27 @@ jobs:
       - name: Install dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
+      - name: Create SQLite database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Configure SQLite
+        run: |
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=${{ github.workspace }}/database/database.sqlite" >> .env
+
       - name: Generate application key
         run: php artisan key:generate
 
       - name: Set directory permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      - name: Create SQLite database
-        run: |
-          mkdir -p database
-          touch database/database.sqlite
-
       - name: Clear config
         run: php artisan config:clear
 
       - name: Run migrations
-        run: php artisan migrate --force
+        run: php artisan migrate:fresh --force
 
       - name: Execute tests
-        run: php artisan test
+        run: php artisan test --debug
