@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Table('criterias_ordinal')]
@@ -19,42 +20,47 @@ use Illuminate\Database\Eloquent\Model;
 
 class CriteriaOrdinal extends Model
 {
-    protected $casts = [
-        'nilai'      => 'integer',
-        'range_from' => 'decimal:4',
-        'range_to'   => 'decimal:4',
-        'urutan'     => 'integer',
-    ];
+    use HasFactory;
 
+    protected $casts = [
+        'nilai' => 'integer',
+        'range_from' => 'decimal:4',
+        'range_to' => 'decimal:4',
+        'urutan' => 'integer',
+    ];
 
     public function Criteria()
     {
         return $this->belongsTo(Criteria::class, 'criteria_id');
     }
+
     public function inspeksiNilaiCriteria()
     {
         return $this->hasMany(InspeksiNilaiCriteria::class);
     }
-
 
     public static function resolveNilai(float $input, int $kriteriaId): ?int
     {
         $ordinals = static::where('criteria_id', $kriteriaId)
             ->orderBy('urutan')
             ->get();
-        if ($ordinals->isEmpty()) return null;
+        if ($ordinals->isEmpty()) {
+            return null;
+        }
         foreach ($ordinals as $ordinal) {
-            $match = match($ordinal->operator) {
-                'eq'      => $input == $ordinal->range_from,
-                'lt'      => $input <  $ordinal->range_from,
-                'lte'     => $input <= $ordinal->range_from,
-                'gt'      => $input >  $ordinal->range_from,
-                'gte'     => $input >= $ordinal->range_from,
+            $match = match ($ordinal->operator) {
+                'eq' => $input == $ordinal->range_from,
+                'lt' => $input < $ordinal->range_from,
+                'lte' => $input <= $ordinal->range_from,
+                'gt' => $input > $ordinal->range_from,
+                'gte' => $input >= $ordinal->range_from,
                 'between' => $input >= $ordinal->range_from && $input <= $ordinal->range_to,
-                default   => false,
+                default => false,
             };
 
-            if ($match) return $ordinal->nilai;
+            if ($match) {
+                return $ordinal->nilai;
+            }
         }
 
         return null;

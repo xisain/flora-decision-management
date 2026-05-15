@@ -15,7 +15,7 @@ class penelitiMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->roles->id == 3 || $request->user()->roles->id == 1) {
+        if ($request->user()->roles->name === 'peneliti') {
             return $next($request);
         } else {
             abort(403, 'Tidak Memiliki Akses');

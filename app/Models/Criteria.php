@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Table('criterias')]
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Criteria extends Model
 {
+    use HasFactory;
+
     protected $casts = [
         'bobot' => 'decimal:2',
         'param_q' => 'decimal:4',

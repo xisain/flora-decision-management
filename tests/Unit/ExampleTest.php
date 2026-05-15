@@ -13,4 +13,11 @@ class ExampleTest extends TestCase
     {
         $this->assertTrue(true);
     }
+        /**
+         * Summary of test_that_trus_is_not_false
+         * @return void
+         */
+        public function test_that_trus_is_not_false() {
+        $this->assertTrue(true);
+    }
 }

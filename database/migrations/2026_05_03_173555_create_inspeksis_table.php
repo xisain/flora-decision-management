@@ -30,10 +30,10 @@ return new class extends Migration
         Schema::create('inspeksi_nilai_criteria', function(Blueprint $table){
             $table->id();
             $table->foreignId('inspeksi_tanaman_id')->constrained('inspeksi_tanaman')->cascadeOnDelete();
-            $table->foreignId('kriteria_id')->constrained('criterias')->cascadeOnDelete();
+            $table->foreignId('criteria_id')->constrained('criterias')->cascadeOnDelete();
             $table->decimal('nilai_numeric',8,4)->nullable();
-            $table->foreignId('kriteria_ordinal_id')->nullable()->constrained('criterias_ordinal')->nullOnDelete();
-            $table->unique(['inspeksi_tanaman_id','kriteria_id']);
+            $table->foreignId('criteria_ordinal_id')->nullable()->constrained('criterias_ordinal')->nullOnDelete();
+            $table->unique(['inspeksi_tanaman_id','criteria_id']);
             $table->timestamps();
         });
 

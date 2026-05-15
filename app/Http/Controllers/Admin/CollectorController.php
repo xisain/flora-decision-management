@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\collector\CollectorCreateRequest;
+use App\Http\Requests\admin\collector\CollectorUpdateRequest;
 use App\Models\CollectorInfo;
 use App\Models\User;
+use App\Services\admin\collector\CollectorService;
 use DB;
 use Illuminate\Http\Request;
 use Log;
 use Illuminate\Validation\Rule;
 class CollectorController extends Controller
 {
+    public function __construct(private CollectorService $cs){}
     /**
      * Display a listing of the resource.
      */
@@ -34,36 +38,9 @@ class CollectorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CollectorCreateRequest $request)
     {
-
-        Log::info($request->all());
-        $validated = $request->validate([
-            'user_id' => ['nullable', 'exists:users,id'],
-            'full_name' => ['required', 'string', 'max:255'],
-            'initial_collector_name' => ['required', 'unique:collector_infos,initial_collector_name,except,id'],
-            'is_manual' => ['required'],
-            'last_sequence' => ['required'],
-        ]);
-        if ($request->has('user_id')) {
-            Log::info('Ada User ID');
-            $validated['user_id'] = $request->user_id;
-        } else {
-            Log::info('tidak ada User ID');
-            $validated['user_id'] = null;
-        }
-        $validated['initial_collector_name'] = strtoupper($validated['initial_collector_name']);
-        DB::transaction(function () use ($validated) {
-            CollectorInfo::create([
-                'user_id'=> $validated['user_id'],
-                'full_name' => $validated['full_name'],
-                'initial_collector_name' => $validated['initial_collector_name'],
-                'is_manual' => $validated['is_manual'],
-                'last_sequence' => $validated['last_sequence'],
-            ]);
-            Log::info('Collector Dibuat');
-        });
-
+        $this->cs->store($request->validated());
         return redirect()->route('collector.index')->with('success', 'Collector Berhasil di buat ');
     }
 
@@ -89,28 +66,10 @@ class CollectorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CollectorUpdateRequest $request, string $id)
     {
-        // dd($request->all());
         $collector = CollectorInfo::findOrFail($id);
-        $validate = $request->validate([
-            'user_id' => ['nullable','exists:users,id'],
-            'full_name' => ['required','string','max:255'],
-            'initial_collector_name' => ['required', 'max:3',Rule::unique('collector_infos','initial_collector_name')->ignore($id),],
-            'last_sequence' => ['required'],
-            'is_manual' => ['required'],
-        ],[]);
-        $validate['user_id'] = $request->filled('user_id')
-        ? $request->user_id
-        : null;
-        // dd($validate);
-        $collector->update([
-            'user_id' => $validate['user_id'],
-            'full_name' => $validate['full_name'],
-            'initial_collector_name' => $validate['initial_collector_name'],
-            'last_sequence' => $validate['last_sequence'],
-            'is_manual' => $validate['is_manual'],
-        ]);
+        $this->cs->update($request->validated(),$collector);
         return redirect()->route('collector.index')->with('success','Berhasil update');
     }
 

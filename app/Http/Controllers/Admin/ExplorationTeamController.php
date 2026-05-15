@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\explorationTeam\ExplorationTeamCreateRequest;
+use App\Http\Requests\admin\explorationTeam\ExplorationTeamUpdateRequest;
 use App\Models\CollectorInfo;
 use App\Models\TimExplorasi;
+use App\Services\admin\explorationTeam\ExplorationTeamService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ExplorationTeamController extends Controller
 {
+    public function __construct(private ExplorationTeamService $ets) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -43,39 +47,9 @@ class ExplorationTeamController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ExplorationTeamCreateRequest $request)
     {
-        // dd($request->all());
-        $validate = $request->validate([
-            'nama_tim' => ['required', 'string', 'max:255'],
-            'lokasi_explorasi' => ['required', 'string', 'max:255'],
-            'deskripsi_explorasi' => ['required', 'string', 'max:255'],
-            'anggota' => ['required', 'array', 'min:3'],
-            'anggota.*.collector_id' => ['required', 'exists:collector_infos,id'],
-            'anggota.*.peran' => ['required', 'string'],
-        ],
-            [
-
-                'anggota.min' => 'Untuk Tim Minimal 3 Orang Terdiri dari 1 Ketua dan 2 Anggota',
-                'anggota.*.peran' => 'Mohon isi Peran dari Anggota',
-                'anggota.*.collector_id.required' => 'Mohon Isi Kolektor ',
-                'anggota.*.collector_id.exists' => 'Collector yang dipilih tidak valid.',
-            ]);
-        // dd($validate);
-        DB::transaction(function () use ($validate) {
-            $tim = TimExplorasi::create([
-                'nama_tim' => $validate['nama_tim'],
-                'deskripsi_team' => $validate['deskripsi_explorasi'],
-                'lokasi_explorasi' => $validate['lokasi_explorasi'],
-            ]);
-            // dd($validate['anggota']);
-            foreach ($validate['anggota'] as $anggota) {
-                $tim->AnggotaTimExplorasi()->create([
-                    'collector_id' => $anggota['collector_id'],
-                    'Peran' => $anggota['peran'],
-                ]);
-            }
-        });
+        $this->ets->store($request->validated());
 
         return redirect()->route('tim-explorasi.index')->with('success', 'Tim Berhasil di buat');
     }
@@ -95,42 +69,22 @@ class ExplorationTeamController extends Controller
     {
         $team = TimExplorasi::with('AnggotaTimExplorasi.Collector.user')->findOrFail($id);
         $collector = CollectorInfo::with('user')->get();
+
         return view('admin.timexplorasi.edit', [
             'team' => $team,
             'members' => $team->AnggotaTimExplorasi,
-            'collector'=> $collector,
+            'collector' => $collector,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ExplorationTeamUpdateRequest $request, string $id)
     {
-        // dd($request->all());
         $tim = TimExplorasi::findOrFail($id);
-        $validate = $request->validate([
-            'nama_tim' => ['required', 'string', 'max:255'],
-            'lokasi_explorasi' => ['required', 'string', 'max:255'],
-            'deskripsi_explorasi' => ['required', 'string', 'max:255'],
-            'anggota' => ['required', 'array', 'min:3'],
-            'anggota.*.collector_id' => ['required', 'exists:collector_infos,id'],
-            'anggota.*.peran' => ['required', 'string'],
-            ]);
-        $tim->update([
-            'nama_tim' => $validate['nama_tim'],
-            'deskripsi_team' => $validate['deskripsi_explorasi'],
-            'lokasi_explorasi' => $validate['lokasi_explorasi'],
-            ]);
-            // hapus anggota untuk didaftar baru jika ada perubahan
-        $tim->AnggotaTimExplorasi()->delete();
-            foreach ($validate['anggota'] as $anggota) {
-            $tim->AnggotaTimExplorasi()->create([
-                'collector_id' => $anggota['collector_id'],
-                'peran' => $anggota['peran'],
-            ]);
-        }
-        // dd($tim);
+        $this->ets->update($request->validated(), $tim);
+
         return redirect()->route('tim-explorasi.index')->with('Success', 'Tim Berhasil di Update');
     }
 

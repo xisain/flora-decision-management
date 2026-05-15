@@ -122,7 +122,7 @@
                                         <input type="number"
                                             name="nilai[{{ $index }}][nilai_numeric]"
                                             step="0.01"
-                                            value="{{ intval($nilai->nilai_numeric) ?? '' }}"
+                                            value="{{ intval($nilai?->nilai_numeric) ?? '' }}"
                                             placeholder="Masukkan nilai..."
                                             class="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--flora-moss)]">
                                         <input type="hidden" name="nilai[{{ $index }}][criteria_ordinal_id]" value="">
