@@ -4,23 +4,21 @@ namespace App\Http\Controllers\peneliti;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\peneliti\penyemaian\CreatePenyemaianRequest;
-use App\Models\penyemaian;
-use App\Models\Tanaman;
-use App\Models\TanamanStatusLogs;
 use App\Repositories\penyemaianRepository;
 use App\Services\peneliti\penyemaian\penyemaianService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class penyemaianTanamanController extends Controller
 {
-    public function __construct(private penyemaianService $penyemaianservices, private penyemaianRepository $penyemaianrepository){}
+    public function __construct(private penyemaianService $penyemaianservices, private penyemaianRepository $penyemaianrepository) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $data = $this->penyemaianrepository->index();
+
         return view('peneliti.penyemaian.index', compact('data'));
     }
 
@@ -30,6 +28,7 @@ class penyemaianTanamanController extends Controller
     public function create()
     {
         $data = $this->penyemaianrepository->create();
+
         return view('peneliti.penyemaian.create', [
             'create' => $data['grouped'],
             'groupedForAlpine' => $data['groupedForAlpine'],
@@ -43,6 +42,7 @@ class penyemaianTanamanController extends Controller
     {
 
         $this->penyemaianservices->store($request->validated());
+
         return redirect()->route('peneliti.penyemaian.index')->with('success', 'Penyemaian berhasil di buat');
     }
 
@@ -52,7 +52,8 @@ class penyemaianTanamanController extends Controller
     public function show(string $id)
     {
         $data = $this->penyemaianrepository->show($id);
-        return view('peneliti.penyemaian.show',compact('data'));
+
+        return view('peneliti.penyemaian.show', compact('data'));
     }
 
     /**

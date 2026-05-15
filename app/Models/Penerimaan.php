@@ -26,7 +26,7 @@ class Penerimaan extends Model
 
     public function legalDocument(): HasMany
     {
-        return $this->hasMany(legalDocuments::class);
+        return $this->hasMany(LegalDocuments::class);
     }
 
     public function TimExplorasi(): BelongsTo

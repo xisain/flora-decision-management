@@ -2,19 +2,26 @@
 
 namespace App\Repositories;
 
+use App\Models\Penyemaian;
 use App\Models\Tanaman;
-use App\Models\penyemaian;
+
 class penyemaianRepository
 {
-    public function index(){
-        $data = penyemaian::with('penyemaianTanaman.Tanaman')->get();
+    public function index()
+    {
+        $data = Penyemaian::with('penyemaianTanaman.Tanaman')->get();
+
         return $data;
     }
-    public function show($id){
-        $data = penyemaian::with('penyemaianTanaman.Tanaman.tanamanPenerimaan.TanamanInfo')->find($id);
+
+    public function show($id)
+    {
+        $data = Penyemaian::with('penyemaianTanaman.Tanaman.tanamanPenerimaan.TanamanInfo')->find($id);
+
         return $data;
 
     }
+
     public function create()
     {
         $tanaman = Tanaman::with(['tanamanPenerimaan.tanamanInfo'])->whereDoesntHave('penyemaianTanaman')->get();
@@ -31,6 +38,7 @@ class penyemaianRepository
                 ])->values(),
             ])
             ->values();
+
         return [
             'grouped' => $grouped,
             'groupedForAlpine' => $groupedForAlpine,

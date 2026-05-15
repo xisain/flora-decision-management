@@ -7,19 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable('penerimaan_id', 'nama_surat', 'nomor_surat', 'path_file', 'user_id')]
+#[Fillable('penerimaan_id', 'nama_surat', 'nomor_surat', 'path_file')]
 
-class legalDocuments extends Model
+class LegalDocuments extends Model
 {
     use HasFactory;
 
     public function penerimaan(): BelongsTo
     {
         return $this->belongsTo(Penerimaan::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

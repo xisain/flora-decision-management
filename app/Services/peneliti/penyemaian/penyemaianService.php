@@ -2,7 +2,7 @@
 
 namespace App\Services\peneliti\penyemaian;
 
-use App\Models\penyemaian;
+use App\Models\Penyemaian;
 use App\Models\TanamanStatusLogs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -12,16 +12,16 @@ class penyemaianService
     public function store(array $validated): void
     {
         Log::info('penyemaianService@store dimulai', [
-            'user_id'           => Auth::id(),
+            'user_id' => Auth::id(),
             'tanggal_penyemaian' => $validated['tanggal_penyemaian'],
-            'jumlah_tanaman'    => count($validated['tanaman']),
+            'jumlah_tanaman' => count($validated['tanaman']),
         ]);
 
-        $penyemaian = penyemaian::create([
+        $penyemaian = Penyemaian::create([
             'tanggal_semai' => $validated['tanggal_penyemaian'],
-            'lokasi_semai'  => $validated['lokasi_semai'],
-            'catatan'       => $validated['catatan'] ?? null,
-            'user_id'       => Auth::id(),
+            'lokasi_semai' => $validated['lokasi_semai'],
+            'catatan' => $validated['catatan'] ?? null,
+            'user_id' => Auth::id(),
         ]);
 
         Log::info("Penyemaian #{$penyemaian->id} berhasil dibuat", [
@@ -29,32 +29,32 @@ class penyemaianService
         ]);
 
         $penyemaian->penyemaianTanaman()->createMany(
-            collect($validated['tanaman'])->map(fn($id) => [
+            collect($validated['tanaman'])->map(fn ($id) => [
                 'tanaman_id' => $id,
             ])->toArray()
         );
 
-        Log::info("PenyemaianTanaman berhasil dibuat", [
+        Log::info('PenyemaianTanaman berhasil dibuat', [
             'penyemaian_id' => $penyemaian->id,
-            'tanaman_ids'   => $validated['tanaman'],
+            'tanaman_ids' => $validated['tanaman'],
         ]);
 
-        $statusLogs = collect($validated['tanaman'])->map(fn($id) => [
-            'tanaman_id'     => $id,
-            'stage'          => 'penyemaian',
-            'status'         => 'hidup',
-            'user_id'        => Auth::id(),
-            'catatan'        => $validated['catatan'] ?? null,
+        $statusLogs = collect($validated['tanaman'])->map(fn ($id) => [
+            'tanaman_id' => $id,
+            'stage' => 'penyemaian',
+            'status' => 'hidup',
+            'user_id' => Auth::id(),
+            'catatan' => $validated['catatan'] ?? null,
             'tanggal_proses' => $validated['tanggal_penyemaian'],
-            'created_at'     => now(),
-            'updated_at'     => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ])->toArray();
 
         TanamanStatusLogs::insert($statusLogs);
 
         Log::info('TanamanStatusLogs berhasil diinsert', [
             'penyemaian_id' => $penyemaian->id,
-            'jumlah_log'    => count($statusLogs),
+            'jumlah_log' => count($statusLogs),
         ]);
 
         Log::info('penyemaianService@store selesai', [

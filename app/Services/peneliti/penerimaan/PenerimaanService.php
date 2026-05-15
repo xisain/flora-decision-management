@@ -3,7 +3,7 @@
 namespace App\Services\peneliti\penerimaan;
 
 use App\Models\AnggotaTimExplorasi;
-use App\Models\legalDocuments;
+use App\Models\LegalDocuments;
 use App\Models\Penerimaan;
 use App\Models\PenerimaanTanaman;
 use App\Models\Tanaman;
@@ -18,9 +18,11 @@ class PenerimaanService
 {
     public function __construct(protected nomorAksesService $nas, protected penerimaanRepository $pr) {}
 
-    public function index(array $filters = []){
+    public function index(array $filters = [])
+    {
         return $this->pr->search($filters);
     }
+
     public function store(array $validated): void
     {
         Log::info('PenerimaanService@store dimulai', [
@@ -105,7 +107,7 @@ class PenerimaanService
 
         foreach ($dokumen as $index => $doc) {
             $path = $doc['fileSurat']->store('dokumen/penerimaan', 'private');
-            $legal = legalDocuments::create([
+            $legal = LegalDocuments::create([
                 'penerimaan_id' => $penerimaanId,
                 'nama_surat' => $doc['namaSurat'],
                 'nomor_surat' => $doc['nomorSurat'] ?? null,

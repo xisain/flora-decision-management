@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable('tanggal_semai', 'lokasi_semai', 'user_id', 'catatan')]
 #[Table('penyemaian')]
-class penyemaian extends Model
+class Penyemaian extends Model
 {
     use HasFactory;
 

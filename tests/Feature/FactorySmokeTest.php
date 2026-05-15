@@ -8,14 +8,15 @@ use App\Models\CriteriaOrdinal;
 use App\Models\Inspeksi;
 use App\Models\InspeksiNilaiCriteria;
 use App\Models\InspeksiTanaman;
-use App\Models\legalDocuments;
+use App\Models\LegalDocuments;
 use App\Models\Penerimaan;
 use App\Models\PenerimaanTanaman;
-use App\Models\penyemaian;
+use App\Models\Penyemaian;
 use App\Models\PenyemaianTanaman;
 use App\Models\Role;
 use App\Models\Tanaman;
 use App\Models\TanamanInfo;
+use App\Models\TanamanStatusLogs;
 use App\Models\TimExplorasi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,7 +57,7 @@ class FactorySmokeTest extends TestCase
             'tanaman_penerimaan_id' => $penerimaanTanaman->id,
         ]);
 
-        $penyemaian = penyemaian::factory()->create([
+        $penyemaian = Penyemaian::factory()->create([
             'user_id' => $user->id,
         ]);
 
@@ -83,9 +84,9 @@ class FactorySmokeTest extends TestCase
             'criteria_ordinal_id' => null,
         ]);
 
-        // legalDocuments::factory()->create([
-        //     'penerimaan_id' => $penerimaan->id,
-        // ]);
+        LegalDocuments::factory()->create([
+            'penerimaan_id' => $penerimaan->id,
+        ]);
 
         $this->assertDatabaseCount('roles', 1);
         $this->assertDatabaseCount('users', 1);
@@ -101,7 +102,7 @@ class FactorySmokeTest extends TestCase
         $this->assertDatabaseCount('inspeksi_tanaman', 1);
         $this->assertDatabaseCount('criterias', 1);
         $this->assertDatabaseCount('inspeksi_nilai_criteria', 1);
-        // $this->assertDatabaseCount('legal_documents', 1);
+        $this->assertDatabaseCount('legal_documents', 1);
     }
 
     public function test_factory_can_create_ordinal_criteria_with_ordinal_value(): void
@@ -120,6 +121,62 @@ class FactorySmokeTest extends TestCase
         $this->assertDatabaseHas('criterias_ordinal', [
             'id' => $criteriaOrdinal->id,
             'criteria_id' => $criteria->id,
+        ]);
+    }
+
+    public function test_factory_can_create_tanaman_status_logs(): void
+    {
+        $tanaman = Tanaman::factory()->create();
+        $user = User::factory()->create();
+
+        $log = TanamanStatusLogs::factory()->create([
+            'tanaman_id' => $tanaman->id,
+            'user_id' => $user->id,
+            'stage' => 'penyemaian',
+            'status' => 'hidup',
+        ]);
+
+        $this->assertDatabaseHas('tanaman_status_logs', [
+            'id' => $log->id,
+            'tanaman_id' => $tanaman->id,
+            'stage' => 'penyemaian',
+            'status' => 'hidup',
+        ]);
+    }
+
+    public function test_factory_can_create_legal_documents(): void
+    {
+        $penerimaan = Penerimaan::factory()->create();
+
+        $doc = LegalDocuments::factory()->create([
+            'penerimaan_id' => $penerimaan->id,
+        ]);
+
+        $this->assertDatabaseHas('legal_documents', [
+            'id' => $doc->id,
+            'penerimaan_id' => $penerimaan->id,
+        ]);
+
+        $this->assertNotNull($doc->nama_surat);
+        $this->assertNotNull($doc->path_file);
+    }
+
+    public function test_factory_can_create_tanaman_status_logs_with_states(): void
+    {
+        $log = TanamanStatusLogs::factory()->penyemaian()->hidup()->create();
+
+        $this->assertDatabaseHas('tanaman_status_logs', [
+            'id' => $log->id,
+            'stage' => 'penyemaian',
+            'status' => 'hidup',
+        ]);
+
+        $logMati = TanamanStatusLogs::factory()->checkup()->mati()->create();
+
+        $this->assertDatabaseHas('tanaman_status_logs', [
+            'id' => $logMati->id,
+            'stage' => 'checkup',
+            'status' => 'mati',
         ]);
     }
 }

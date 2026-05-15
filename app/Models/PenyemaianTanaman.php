@@ -15,7 +15,7 @@ class PenyemaianTanaman extends Model
 
     public function penyemaian()
     {
-        return $this->belongsTo(penyemaian::class);
+        return $this->belongsTo(Penyemaian::class);
     }
 
     public function tanaman()
