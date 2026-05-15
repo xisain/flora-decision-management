@@ -3,70 +3,27 @@
 namespace App\Http\Controllers\peneliti\ranking;
 
 use App\Http\Controllers\Controller;
-use App\Models\Criteria;
-use App\Models\InspeksiNilaiCriteria;
 use App\Models\InspeksiTanaman;
-use App\Services\peneliti\algorithm\PrometheeIIService;
+use App\Services\peneliti\RankingService;
 use Illuminate\Http\Request;
 
 class RankingTanamanController extends Controller
 {
-    public function __construct(private PrometheeIIService $piis) {}
+    public function __construct() {}
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(RankingService $rs)
     {
-        $criterion = Criteria::active()->get();
-        $rows = InspeksiNilaiCriteria::with(['criteria', 'criteriaOrdinal'])->get();
-        $grouped = $rows->groupBy('inspeksi_tanaman_id');
-
-        $alts = $grouped->map(function ($items, $inspeksiTanamanId) {
-            $nilai = [];
-            foreach ($items as $item) {
-                $criteriaId = $item->criteria_id;
-                if ($item->criteria->skala === 'ordinal') {
-                    $nilai[$criteriaId] = $item->criteriaOrdinal->nilai ?? 0;
-                } else {
-                    $nilai[$criteriaId] = (float) $item->nilai_numeric;
-                }
-            }
-
-            return [
-                'tanaman_id' => $items->first()->inspeksi_tanaman_id,
-                'inspeksi_tanaman_id' => $inspeksiTanamanId,
-                'nilai' => $nilai,
-            ];
-        })->values();
-
-        $service = PrometheeIIService::calculate($alts, $criterion);
-
-        // Handle incomplete data
-        if ($service->get('status') === 'incomplete') {
-            return view('peneliti.ranking.index', [
-                'incomplete' => true,
-                'warnings' => $service->get('warnings'),
-                'service' => collect(),
-                'inspeksiMap' => collect(),
-                'inspeksiIdMap' => collect(),
-            ]);
-        }
-
-        $inspeksiIds = collect($service)->pluck('tanaman_id');
-        $inspeksiMap = InspeksiTanaman::with('tanaman.tanamanPenerimaan.tanamanInfo')
-            ->whereIn('id', $inspeksiIds)
-            ->get()
-            ->keyBy('id');
-        $inspeksiIdMap = InspeksiTanaman::whereIn('id', $inspeksiIds)
-            ->pluck('inspeksi_id', 'id');
+        $ranking = $rs->getRanking();
 
         return view('peneliti.ranking.index', [
-            'incomplete' => false,
-            'warnings' => [],
-            'service' => $service,
-            'inspeksiMap' => $inspeksiMap,
-            'inspeksiIdMap' => $inspeksiIdMap,
+            'incomplete' => $ranking['incomplete'],
+            'warnings' => $ranking['warnings'],
+            'service' => $ranking['service'],
+            'inspeksiMap' => $ranking['inspeksiMap'],
+            'inspeksiIdMap' => $ranking['inspeksiIdMap'],
         ]);
     }
 

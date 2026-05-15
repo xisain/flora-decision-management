@@ -13,11 +13,12 @@ use App\Models\PenyemaianTanaman;
 use App\Models\Tanaman;
 use App\Models\TimExplorasi;
 use App\Models\User;
+use App\Services\peneliti\RankingService;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardRepository
 {
-    public function __construct()
+    public function __construct(private RankingService $ranking)
     {
         //
     }
@@ -67,7 +68,7 @@ class DashboardRepository
         $labelingCount = $countInspeksiByStage('labeling');
         $aklimatisasiCount = $countInspeksiByStage('aklimatisasi');
         $evaluasiCount = $countInspeksiByStage('evaluasi');
-
+        $rankingTanaman = $this->ranking->getTopRanking(3);
         return compact(
             'dataPenerimaaanCount',
             'dataPenerimaanTanamanCount',
@@ -76,7 +77,8 @@ class DashboardRepository
             'checkupCount',
             'labelingCount',
             'aklimatisasiCount',
-            'evaluasiCount');
+            'evaluasiCount',
+            'rankingTanaman');
     }
 
     public function dashboardAdmin()

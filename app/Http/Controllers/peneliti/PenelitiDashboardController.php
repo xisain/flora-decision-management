@@ -4,6 +4,7 @@ namespace App\Http\Controllers\peneliti;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\DashboardRepository;
+use App\Services\peneliti\RankingService;
 
 class PenelitiDashboardController extends Controller
 {

@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('inspeksi', inspeksiTanamanController::class)->names('peneliti.inspeksi');
     });
     Route::prefix('test')->group(function () {
-        Route::get('/', [RankingTanamanController::class, 'index']);
+        Route::get('/', [RankingTanamanController::class, 'index'])->name('detail.rank');
         Route::get('/{inspeksi_tanaman_id}', [RankingTanamanController::class, 'findbyInspeksiTanamanId']);
     });
 });
