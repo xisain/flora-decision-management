@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -37,6 +37,19 @@ class AuthAuthorizationTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('admin.home'));
         $response->assertStatus(200);
+        $response->assertViewHasAll([
+            'userCount',
+            'collectorCount',
+            'criteriaCount',
+            'activeCriteriaCount',
+            'inactiveCriteriaCount',
+            'timExplorasiCount',
+            'tanamanCount',
+            'penerimaanCount',
+            'eksplorasiCount',
+            'introduksiCount',
+            'recentActivities',
+        ]);
     }
 
     public function test_peneliti_bisa_akses_peneliti_dashboard()
@@ -45,6 +58,15 @@ class AuthAuthorizationTest extends TestCase
 
         $response = $this->actingAs($peneliti)->get(route('peneliti.home'));
         $response->assertStatus(200);
+        $response->assertViewHasAll([
+            'dataPenerimaaanCount',
+            'dataPenerimaanTanamanCount',
+            'tanamanCount',
+            'penyemaianTanamanCount',
+            'checkupCount',
+            'labelingCount',
+            'aklimatisasiCount',
+            'evaluasiCount']);
     }
 
     public function test_peneliti_tidak_bisa_akses_halaman_admin()

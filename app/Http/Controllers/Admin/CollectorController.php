@@ -49,7 +49,7 @@ class CollectorController extends Controller
      */
     public function show(string $id)
     {
-        $find = CollectorInfo::with('penerimaanTanaman')->find($id);
+        $find = CollectorInfo::with(['penerimaanTanaman.tanamanInfo','user'])->find($id);
         return view('admin.collector.show',compact('find'));
     }
 
