@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Penyemaian;
+use App\Models\PenyemaianTanaman;
 use App\Models\Role;
 use App\Models\Tanaman;
 use App\Models\TanamanStatusLogs;
@@ -55,6 +56,12 @@ class PenelitiPenyemaianTest extends TestCase
         ]);
 
         // Ensure status changed in logs (skip test for simplicity as no status column exists)
+    }
+    public function test_peneliti_bisa_melihat_detail_penyemaian_tanaman(){
+        $semai = PenyemaianTanaman::factory()->create();
+        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penyemaian.show',$semai->id));
+        $response->assertStatus(200);
+        $response->assertViewHasAll(['data', 'groupedTanaman', 'groupedTanamanPaginated']);
     }
 
     public function test_tanaman_yang_sudah_disemai_tidak_muncul_lagi_di_pilihan()

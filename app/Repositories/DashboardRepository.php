@@ -63,6 +63,9 @@ class DashboardRepository
                 })
                 ->count();
         };
+        $belumPenyemaianCount = Tanaman::whereDoesntHave('penyemaianTanaman')->count();
+        $belumInspeksiCount = Tanaman::whereHas('penyemaianTanaman')->whereDoesntHave('inspeksiTanaman')->count();
+
 
         $checkupCount = $countInspeksiByStage('checkup');
         $labelingCount = $countInspeksiByStage('labeling');
@@ -78,7 +81,9 @@ class DashboardRepository
             'labelingCount',
             'aklimatisasiCount',
             'evaluasiCount',
-            'rankingTanaman');
+            'rankingTanaman',
+            'belumPenyemaianCount',
+            'belumInspeksiCount');
     }
 
     public function dashboardAdmin()

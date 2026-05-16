@@ -51,8 +51,10 @@ class inspeksiRepository
             })
             ->get();
         $criteria = Criteria::with('ordinals')->active()->get();
+        $oldPlants  = old('plants', []);
+        $oldStage   = old('stage', 'checkup');
 
-        return compact('checkup', 'criteria', 'labeling', 'aklimatisasi', 'evaluasi');
+        return compact('checkup', 'criteria', 'labeling', 'aklimatisasi', 'evaluasi','oldPlants','oldStage');
 
     }
 

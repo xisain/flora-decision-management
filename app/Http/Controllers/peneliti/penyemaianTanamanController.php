@@ -51,9 +51,7 @@ class penyemaianTanamanController extends Controller
      */
     public function show(string $id)
     {
-        $data = $this->penyemaianrepository->show($id);
-
-        return view('peneliti.penyemaian.show', compact('data'));
+        return view('peneliti.penyemaian.show',  $this->penyemaianrepository->show($id));
     }
 
     /**

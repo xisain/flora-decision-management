@@ -83,7 +83,7 @@
         </div>
         {{-- {{ $data }} --}}
         <form action="{{ route('peneliti.inspeksi.store') }}" method="POST" class="px-6 py-6 space-y-6"
-            x-data="inspeksiForm()">
+            x-data="inspeksiForm(@js(old('plants', [])), @js(old('stage', 'checkup')))">
             <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -703,9 +703,9 @@
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('inspeksiForm', () => ({
-                    selectedStage: 'checkup',
-                    currentStep: 1,
+                Alpine.data('inspeksiForm', (oldPlants = {}, oldStage = 'checkup') => ({
+                    selectedStage: oldStage, // ← pakai oldStage
+                    currentStep: oldPlants && Object.keys(oldPlants).length > 0 ? 2 : 1,
                     selectedPlants: [],
 
                     checkup: @json($checkupData),
@@ -713,7 +713,33 @@
                     aklimatisasi: @json($AklimatisasiData),
                     evaluasi: @json($evaluasiData),
                     criteriaList: @json($criteriaData),
+                    init() {
+                        if (!oldPlants || Object.keys(oldPlants).length === 0) return
 
+                        const stageData = this[oldStage] ?? []
+
+                        Object.entries(oldPlants).forEach(([plantId, plantData]) => {
+                            const plant = stageData.find(p => p.id == plantId)
+                            if (!plant) return
+
+                            const nilaiKriteria = {}
+                            this.criteriaList.forEach(k => {
+                                nilaiKriteria[k.id] = plantData?.kriteria?.[k.id]?.nilai ??
+                                    ''
+                            })
+
+                            this.selectedPlants.push({
+                                ...plant,
+                                status: plantData.status ?? '',
+                                label: plantData.label ?? '',
+                                label_confirmed: plantData.label_confirmed ?? '',
+                                polybag: plantData.polybag ?? '',
+                                nilai_kriteria: nilaiKriteria,
+                            })
+                        })
+
+                        this.$nextTick(() => this.syncIndeterminate())
+                    },
 
                     get currentStageData() {
                         return this[this.selectedStage] ?? []
@@ -724,14 +750,17 @@
                         if (exists) {
                             this.selectedPlants = this.selectedPlants.filter(p => p.id !== plant.id)
                         } else {
-
                             const nilaiKriteria = {}
                             this.criteriaList.forEach(k => {
                                 nilaiKriteria[k.id] = ''
                             })
+
                             this.selectedPlants.push({
                                 ...plant,
                                 status: '',
+                                label: '', // ← tambah
+                                label_confirmed: '', // ← tambah
+                                polybag: '', // ← tambah
                                 nilai_kriteria: nilaiKriteria,
                             })
                         }
@@ -751,6 +780,9 @@
                                     this.selectedPlants.push({
                                         ...plant,
                                         status: '',
+                                        label: '', // ← tambah
+                                        label_confirmed: '', // ← tambah
+                                        polybag: '', // ← tambah
                                         nilai_kriteria: nilaiKriteria,
                                     })
                                 }
