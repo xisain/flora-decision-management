@@ -89,6 +89,7 @@ class PenelitiInspeksiTest extends TestCase
                 [
                     'id' => $tanaman->id,
                     'status' => 'hidup',
+                    'label' => true
                 ],
             ],
         ];

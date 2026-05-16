@@ -1,48 +1,35 @@
 @extends('layout.admin')
 @section('content')
     @php
-        $checkupData = $checkup
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+        $mapTanamanForInspeksi = function ($items) {
+            return $items
+                ->map(function ($i) {
+                    $lastInspeksiTanaman = $i->inspeksiTanaman
+                        ->sortByDesc(fn($row) => $row->inspeksi?->tanggal_inspeksi)
+                        ->first();
 
-        $labelingData = $labeling
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
-        $AklimatisasiData = $aklimatisasi
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+                    $statusTerakhir = $lastInspeksiTanaman?->status ?? $i->penyemaianTanaman->first()?->status;
 
-        $evaluasiData = $evaluasi
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+                    return [
+                        'id' => $i->id,
+                        'nomor_akses' => $i->nomor_akses,
+                        'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
+                        'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
+
+                        // status terakhir dari inspeksi, fallback ke penyemaian
+                        'status_terakhir' => $statusTerakhir,
+                        'stage_terakhir' => $lastInspeksiTanaman?->inspeksi?->stage,
+                        'tanggal_mati' => $lastInspeksiTanaman?->tanggal_mati,
+                    ];
+                })
+                ->values();
+        };
+
+        $checkupData = $mapTanamanForInspeksi($checkup);
+        $labelingData = $mapTanamanForInspeksi($labeling);
+        $AklimatisasiData = $mapTanamanForInspeksi($aklimatisasi);
+        $evaluasiData = $mapTanamanForInspeksi($evaluasi);
+
         $criteriaData = $criteria
             ->map(
                 fn($c) => [
@@ -328,18 +315,23 @@
                                             <td class="px-4 py-3 italic text-gray-700">
                                                 {{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}</td>
                                             <td class="px-4 py-3 text-gray-600">
-                                                {{ $item->tanamanPenerimaan->tanamanInfo->author_name }}</td>
+                                                {{ $item->tanamanPenerimaan->tanamanInfo->author_name }} </td>
                                             <td class="px-4 py-3">
-                                                @php $status = $item->penyemaianTanaman->first()?->status @endphp
+                                                @php
+                                                    $lastInspeksiTanaman = $item->inspeksiTanaman
+                                                        ->sortByDesc(fn($row) => $row->inspeksi?->tanggal_inspeksi)
+                                                        ->first();
+
+                                                    $status =
+                                                        $lastInspeksiTanaman?->status ??
+                                                        $item->penyemaianTanaman->first()?->status;
+
+                                                    $stageTerakhir = $lastInspeksiTanaman?->inspeksi?->stage;
+                                                @endphp
+
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            {{ $status === 'hidup'
-                                ? 'bg-green-100 text-green-700'
-                                : ($status === 'mati'
-                                    ? 'bg-red-100 text-red-700'
-                                    : ($status === 'recovery'
-                                        ? 'bg-yellow-100 text-yellow-700'
-                                        : 'bg-gray-100 text-gray-600')) }}">
+                                                    {{ $status === 'hidup' ? 'bg-green-100 text-green-700' : ($status === 'mati'? 'bg-red-100 text-red-700': ($status === 'recovery'? 'bg-yellow-100 text-yellow-700': 'bg-gray-100 text-gray-600')) }}">
                                                     {{ Str::upper($status ?? '-') }}
                                                 </span>
                                             </td>
@@ -496,7 +488,6 @@
                     </div>
 
                     {{-- STEP 2 --}}
-                    {{-- STEP 2 --}}
                     <div x-show="currentStep === 2" x-transition>
                         <div class="mb-4">
                             <h2 class="text-lg font-semibold text-[var(--flora-moss)]">Data Tanaman Terpilih</h2>
@@ -618,10 +609,10 @@
                                                 </p>
                                                 <p class="text-sm text-gray-500" x-text="plant.author_name"></p>
                                             </div>
-                                            <div class="w-52">
+                                            <div>
                                                 <label class="block text-sm mb-1">Status</label>
                                                 <select x-model="plant.status" :name="`plants[${plant.id}][status]`"
-                                                    class="w-full border rounded-xl px-3 py-2">
+                                                    class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800">
                                                     <option value="">Pilih Status</option>
                                                     <option value="hidup">Hidup</option>
                                                     <option value="mati">Mati</option>
@@ -629,25 +620,26 @@
                                                     <option value="dormant">Dormant</option>
                                                 </select>
                                             </div>
-                                        </div>
-
-                                        {{-- CHECKUP --}}
-                                        <template x-if="selectedStage === 'checkup'">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label class="block text-sm mb-1">Label Tanaman</label>
-                                                    <input type="text" :name="`plants[${plant.id}][label]`"
-                                                        class="w-full border rounded-xl px-3 py-2">
+                                            <template x-if="plant.status === 'mati'" x-cloak x-transition>
+                                                <div class="w-100" x-transition x-cloak>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label class="block text-sm mb-1">Tanggal Mati</label>
+                                                            <input type="date" x-model="plant.tanggal_mati"
+                                                                :name="`plants[${plant.id}][tanggal_mati]`"
+                                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800"
+                                                                required>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </template>
-
+                                            </template>
+                                        </div>
                                         {{-- LABELING --}}
                                         <template x-if="selectedStage === 'labeling'">
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
                                                     <label class="block text-sm mb-1">Konfirmasi Label</label>
-                                                    <select :name="`plants[${plant.id}][label_confirmed]`"
+                                                    <select :name="`plants[${plant.id}][label]`"
                                                         class="w-full border rounded-xl px-3 py-2">
                                                         <option value="">-- pilih --</option>
                                                         <option value="1">Sudah Ditempel</option>
@@ -667,7 +659,6 @@
                                                 </div>
                                             </div>
                                         </template>
-
                                         <input type="hidden" :name="`plants[${plant.id}][id]`" :value="plant.id">
                                     </div>
                                 </template>
@@ -732,8 +723,7 @@
                                 ...plant,
                                 status: plantData.status ?? '',
                                 label: plantData.label ?? '',
-                                label_confirmed: plantData.label_confirmed ?? '',
-                                polybag: plantData.polybag ?? '',
+                                tanggal_mati: plantData.tanggal_mati ?? '',
                                 nilai_kriteria: nilaiKriteria,
                             })
                         })
@@ -758,9 +748,8 @@
                             this.selectedPlants.push({
                                 ...plant,
                                 status: '',
-                                label: '', // ← tambah
-                                label_confirmed: '', // ← tambah
-                                polybag: '', // ← tambah
+                                label: '',
+                                tanggal_mati: '',
                                 nilai_kriteria: nilaiKriteria,
                             })
                         }
@@ -781,8 +770,7 @@
                                         ...plant,
                                         status: '',
                                         label: '', // ← tambah
-                                        label_confirmed: '', // ← tambah
-                                        polybag: '', // ← tambah
+                                        tanggal_mati: '', // ← tambah
                                         nilai_kriteria: nilaiKriteria,
                                     })
                                 }
