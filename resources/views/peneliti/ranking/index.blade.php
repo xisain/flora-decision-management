@@ -76,7 +76,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-gray-100 bg-gray-50 text-left">
+                        <tr class="border-b border-gray-100 bg-emerald-50/70 text-left">
                             <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest w-8">#</th>
                             <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">Ranking
                             </th>

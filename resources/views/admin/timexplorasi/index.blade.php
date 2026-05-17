@@ -83,15 +83,15 @@
             @else
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-gray-100 bg-gray-50 text-left">
-                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest w-8">#</th>
-                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">Nama Tim
+                        <tr class="border-b border-gray-100 bg-emerald-50/70 text-left">
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest w-8">#</th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">Nama Tim
                             </th>
-                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">Lokasi
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">Lokasi
                             </th>
-                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">Anggota
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">Anggota
                             </th>
-                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">Aksi</th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-700 uppercase tracking-widest text-center">Aksi</th>
                         </tr>
                     </thead>
 
@@ -99,7 +99,7 @@
                         <tbody x-data="{ open: false }">
 
                             {{-- Row utama --}}
-                            <tr class="hover:bg-gray-50/60 transition border-b border-gray-100">
+                            <tr class="hover:bg-emerald-50/60 transition border-b border-gray-100 group">
                                 <td class="px-5 py-4 text-gray-400 text-xs">
                                     {{ $team->firstItem() + $i }}
                                 </td>
@@ -133,20 +133,18 @@
                                 </td>
 
                                 {{-- Aksi --}}
-                                <td class="px-5 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <a href="{{ route('tim-explorasi.edit', $tim->id) }}"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--flora-moss)] border border-[var(--flora-moss)]/30 rounded-lg hover:bg-[var(--flora-moss)]/5 transition">
-                                            <i class="fa-solid fa-pen text-[10px]"></i>
-                                            Edit
+                                <td class="px-5 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                        <a href="{{ route('tim-explorasi.edit', $tim->id) }}" title="Edit"
+                                            class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                                            <i class="fa-solid fa-pen text-xs"></i>
                                         </a>
                                         <form action="{{ route('tim-explorasi.destroy', $tim->id) }}" method="POST" class="form-delete">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition">
-                                                <i class="fa-solid fa-trash text-[10px]"></i>
-                                                Hapus
+                                                class="btn-delete p-1.5 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                                <i class="fa-solid fa-trash text-xs"></i>
                                             </button>
                                         </form>
                                     </div>

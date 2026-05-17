@@ -1,24 +1,47 @@
 @extends('layout.admin')
 @section('content')
+    @if ($errors->any())
+        <div class="mb-4 flex gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm">
+            <div class="shrink-0 pt-0.5">
+                <i class="fa-solid fa-circle-exclamation text-red-500 text-base"></i>
+            </div>
+            <div>
+                <p class="font-semibold text-red-700 mb-1">Terdapat {{ $errors->count() }} Kesalahan</p>
+                <ul class="list-disc list-inside space-y-0.5 text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="mb-4 flex gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm">
+            <div class="shrink-0 pt-0.5">
+                <i class="fa-solid fa-circle-check text-green-500 text-base"></i>
+            </div>
+            <p class="text-green-700 font-medium">{{ session('success') }}</p>
+        </div>
+    @endif
     <div class="px-4 py-6 mx-auto">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h1 class="text-2xl font-semibold text-(--flora-moss) tracking-tight">
+                <h1 class="text-2xl font-semibold text-[var(--flora-moss)] tracking-tight">
                     Penyemaian Koleksi
                 </h1>
-                <p class="text-sm mt-1 text-(--flora-stone)">taruh teks disini</p>
+                <p class="text-sm text-[var(--flora-stone)] mt-1">Kelola data Penyemaian</p>
             </div>
             <a href="{{ route('peneliti.penyemaian.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white
-                   bg-[var(--flora-teal)] rounded-lg hover:bg-[var(--flora-moss)] transition-colors">
-                <i class="fa-solid fa-plus text-xs"></i> Tambah Seeding
+                   bg-[var(--flora-teal)] rounded-lg hover:bg-[var(--flora-moss)] transition-colors duration-200">
+                <i class="fa-solid fa-plus text-xs"></i>
+                Tambah Seeding
             </a>
         </div>
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-            <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-200 bg-gray-50/text-red-600">
-                <form action="{{ route('peneliti.penyemaian.index') }}" method="get"
-                    class="flex flex-wrap items-center gap-2 w-full">
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/60">
+                <form action="{{ route('peneliti.penyemaian.index') }}" method="GET"
+                    class="flex flex-wrap items-center gap-3 w-full">
                     <div class="flex flex-col gap-0.5">
                         <label class="text-[10px] text-gray-400 font-medium uppercase tracking-wide px-1">
                             Tgl. Penyemaian
@@ -27,26 +50,24 @@
                             <input type="date" name="penyemaian_dari" value="{{ request('penyemaian_dari') }}"
                                 class="py-2 px-3 text-sm border border-gray-200 rounded-lg
                                    focus:outline-none focus:ring-2 focus:ring-[var(--flora-teal)]
-                                   focus:border-transparent bg-white">
-                            <span class="text-gray-400 text-xs">-</span>
+                                   focus:border-transparent bg-white" />
+                            <span class="text-gray-400 text-xs">–</span>
                             <input type="date" name="penyemaian_sampai" value="{{ request('penyemaian_sampai') }}"
                                 class="py-2 px-3 text-sm border border-gray-200 rounded-lg
                                    focus:outline-none focus:ring-2 focus:ring-[var(--flora-teal)]
-                                   focus:border-transparent bg-white">
+                                   focus:border-transparent bg-white" />
                         </div>
                     </div>
                     <div class="flex items-end gap-2 self-end">
                         <button type="submit"
                             class="px-4 py-2 text-sm font-medium text-white bg-[var(--flora-teal)]
-                           rounded-lg hover:bg-[var(--flora-moss)] transition-colors whitespace-nowrap">
+                                   rounded-lg hover:bg-[var(--flora-moss)] transition-colors whitespace-nowrap">
                             <i class="fa-solid fa-filter text-xs mr-1"></i> Filter
                         </button>
-
-                        {{-- ✅ Tombol reset filter --}}
-                        @if (request()->hasAny(['search', 'penyemaian_dari', 'penyemaian_sampai']))
+                        @if (request()->hasAny(['penyemaian_dari', 'penyemaian_sampai']))
                             <a href="{{ route('peneliti.penyemaian.index') }}"
                                 class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100
-                               rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap">
+                                       rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap">
                                 <i class="fa-solid fa-xmark text-xs mr-1"></i> Reset
                             </a>
                         @endif
@@ -56,40 +77,37 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr>
-                            <th
-                                class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                #</th>
-                            <th
-                                class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                Tgl Semai</th>
-                            <th
-                                class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                Jumlah Semai</th>
-                            <th
-                                class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                Penanggung Jawab</th>
-                            <th
-                                class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                Catatan Semai</th>
-                            <th
-                                class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
-                                Aksi</th>
+                        <tr class="border-b border-gray-100 bg-emerald-50/70 text-left">
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest w-8">#</th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">
+                                Tgl Semai
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">
+                                Jumlah Semai
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">
+                                Penanggung Jawab
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-widest">
+                                Catatan Semai
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-700 uppercase tracking-widest text-center">
+                                Aksi
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse ($data as $index => $p)
-                            <tr class="hover:bg-gray-50/70 transition-colors duration-150 group">
-                                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $index + 1 }}</td>
-                                <td class="px-5 py-3.5 text-gray-700 text-xs">
-                                    {{ \Carbon\Carbon::parse($p->tanggal_penyemaian)->format('d-m-Y') }}</td>
-                                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ count($p->penyemaianTanaman) }} Tanaman
+                            <tr class="hover:bg-emerald-50/60 transition border-b border-gray-200 group">
+                                <td class="px-5 py-4 text-gray-700">{{ $index + 1 }}</td>
+                                <td class="px-5 py-4 text-gray-700">
+                                    {{ \Carbon\Carbon::parse($p->tanggal_penyemaian)->format('d M Y') }}
                                 </td>
-                                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $p->user->name }}</td>
-                                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $p->catatan }}</td>
-                                <td class="px-5 py-3.5">
-                                    <div
-                                        class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                <td class="px-5 py-4 text-gray-700">{{ count($p->penyemaianTanaman) }} Tanaman</td>
+                                <td class="px-5 py-4 text-gray-700">{{ $p->user->name }}</td>
+                                <td class="px-5 py-4 text-gray-700">{{ $p->catatan }}</td>
+                                <td class="px-5 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-1">
                                         <a href="{{ route('peneliti.penyemaian.show', $p->id) }}" title="Detail"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
                                             <i class="fa-solid fa-eye text-xs"></i>
@@ -112,13 +130,55 @@
                                         </form>
                                     </div>
                                 </td>
-
                             </tr>
                         @empty
+                            <tr>
+                                <td colspan="6" class="px-5 py-16 text-center">
+                                    <div class="flex flex-col items-center gap-3 text-gray-400">
+                                        <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <i class="fa-solid fa-seedling text-gray-400 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-500">Belum ada data Penyemaian</p>
+                                            <p class="text-xs mt-1 text-gray-400">
+                                                @if (request()->hasAny(['penyemaian_dari', 'penyemaian_sampai']))
+                                                    Coba ubah filter pencarian
+                                                @else
+                                                    Mulai dengan menambahkan Penyemaian baru
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.querySelectorAll('.form-delete').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Hapus data ini?',
+                        text: 'Data yang dihapus tidak dapat dikembalikan.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, hapus',
+                        cancelButtonText: 'Batal',
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        </script>
+    @endpush
 @endsection

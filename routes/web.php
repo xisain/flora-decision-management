@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('collector', CollectorController::class);
             Route::resource('tim-explorasi', ExplorationTeamController::class);
             Route::resource('criteria', CriteriaController::class);
+            Route::resource('logtanaman',\App\Http\Controllers\Admin\TanamanLoggingController::class);
         });
 
     });
