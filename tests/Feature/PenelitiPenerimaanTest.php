@@ -34,6 +34,13 @@ class PenelitiPenerimaanTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('penerimaan');
     }
+    public function test_peneliti_bisa_melihat_view_buat_penerimaan(){
+        $collector = CollectorInfo::factory()->create();
+        $team = TimExplorasi::factory()->create();
+        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penerimaan.create'));
+        $response->assertStatus(200);
+        $response->assertViewHasAll(['collector', 'team']);
+    }
 
     public function test_peneliti_bisa_membuat_penerimaan_tanaman()
     {
