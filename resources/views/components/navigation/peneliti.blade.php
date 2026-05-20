@@ -54,7 +54,41 @@
                     Inspeksi
                 </span>
             </a>
+
+            {{-- Ranking --}}
+            <a href="{{ Route::has('peneliti.ranking.index') ? route('peneliti.ranking.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.ranking.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-chart-bar" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Perankingan
+                </span>
+            </a>
+
+            {{-- Koleksi Kebun Raya --}}
+            <a href="{{ Route::has('peneliti.koleksi.index') ? route('peneliti.koleksi.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.koleksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-leaf" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Koleksi Kebun Raya
+                </span>
+            </a>
+
+            {{-- Pelaporan PROMETHEE II --}}
+            <a href="{{ Route::has('peneliti.pelaporan.index') ? route('peneliti.pelaporan.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.pelaporan.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-chart-column" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Pelaporan
+                </span>
+            </a>
         </nav>
+
     </div>
 
     {{-- User Profile & Logout --}}
