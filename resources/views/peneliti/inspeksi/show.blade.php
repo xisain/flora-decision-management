@@ -131,7 +131,7 @@
                                                     @if ($nilaiRow->nilai_numeric !== null)
                                                         {{ intval($nilaiRow->nilai_numeric) }} {{ $crit->satuan }}
                                                     @elseif($nilaiRow->criteriaOrdinal)
-                                                        {{ $nilaiRow->criteriaOrdinal->label }}
+                                                        {{ $nilaiRow->criteriaOrdinal->label }} ({{ $nilaiRow->criteriaOrdinal->urutan }})
                                                     @else
                                                         -
                                                     @endif

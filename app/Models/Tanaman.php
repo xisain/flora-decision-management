@@ -32,4 +32,7 @@ class Tanaman extends Model
     {
         return $this->tanamanPenerimaan->nomor_akses.'-'.str_pad($this->nomor_urut, 3, '0', STR_PAD_LEFT);
     }
+    public function koleksiKebunRaya(){
+        return $this->hasMany(KebunRayaKoleksi::class);
+    }
 }

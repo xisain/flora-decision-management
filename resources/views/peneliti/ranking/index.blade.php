@@ -257,13 +257,13 @@
                                     @if ($netFlow > 0)
                                         <span
                                             class="inline-flex items-center justify-end gap-1 font-mono text-sm font-semibold text-emerald-600">
-                                            <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                                            +
                                             {{ number_format($netFlow, 4) }}
                                         </span>
                                     @elseif ($netFlow < 0)
                                         <span
                                             class="inline-flex items-center justify-end gap-1 font-mono text-sm font-semibold text-red-500">
-                                            <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                                            -
                                             {{ number_format(abs($netFlow), 4) }}
                                         </span>
                                     @else

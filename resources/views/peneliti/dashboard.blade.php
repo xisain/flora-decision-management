@@ -44,32 +44,32 @@
             ],
         ];
 
-        $stages = [
-            [
-                'title' => 'Checkup',
-                'value' => $checkupCount ?? 0,
-                'description' => 'Tanaman masuk tahap pemeriksaan awal',
-                'color' => 'bg-emerald-500',
-            ],
-            [
-                'title' => 'Labeling',
-                'value' => $labelingCount ?? 0,
-                'description' => 'Tanaman sudah masuk proses pelabelan',
-                'color' => 'bg-sky-500',
-            ],
-            [
-                'title' => 'Aklimatisasi',
-                'value' => $aklimatisasiCount ?? 0,
-                'description' => 'Tanaman sedang proses adaptasi',
-                'color' => 'bg-amber-500',
-            ],
-            [
-                'title' => 'Evaluasi',
-                'value' => $evaluasiCount ?? 0,
-                'description' => 'Tanaman masuk tahap penilaian akhir',
-                'color' => 'bg-violet-500',
-            ],
-        ];
+        // $stages = [
+        //     [
+        //         'title' => 'Checkup',
+        //         'value' => $checkupCount ?? 0,
+        //         'description' => 'Tanaman masuk tahap pemeriksaan awal',
+        //         'color' => 'bg-emerald-500',
+        //     ],
+        //     [
+        //         'title' => 'Labeling',
+        //         'value' => $labelingCount ?? 0,
+        //         'description' => 'Tanaman sudah masuk proses pelabelan',
+        //         'color' => 'bg-sky-500',
+        //     ],
+        //     [
+        //         'title' => 'Aklimatisasi',
+        //         'value' => $aklimatisasiCount ?? 0,
+        //         'description' => 'Tanaman sedang proses adaptasi',
+        //         'color' => 'bg-amber-500',
+        //     ],
+        //     [
+        //         'title' => 'Evaluasi',
+        //         'value' => $evaluasiCount ?? 0,
+        //         'description' => 'Tanaman masuk tahap penilaian akhir',
+        //         'color' => 'bg-violet-500',
+        //     ],
+        // ];
 
         $tasks = [
             [
@@ -100,17 +100,12 @@
         {{-- Header --}}
             <div class="flex flex-col gap-1">
                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600">
-                    Halo, {{ Auth::user()->name ?? 'Peneliti' }}!
+                    Halo, {{ Auth::user()->name ?? 'Peneliti' }} ({{ Auth::user()->roles->name }})!
                 </p>
 
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold tracking-tight text-slate-900">
-                            Dashboard Peneliti
-                        </h1>
-                        <p class="mt-1 text-sm text-slate-500">
-                            Pantau ringkasan penerimaan, penyemaian, inspeksi, dan evaluasi tanaman.
-                        </p>
+
                     </div>
                 </div>
             </div>
@@ -179,7 +174,7 @@
             </div>
 
             {{-- Progress Tahapan --}}
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
+            {{-- <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
                 @foreach ($stages as $stage)
                     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <div class="flex items-center justify-between gap-3">
@@ -206,7 +201,7 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
+            </div> --}}
 
             {{-- Middle Section --}}
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -223,10 +218,10 @@
                             </p>
                         </div>
 
-                        <a href="#"
+                        {{-- <a href="#"
                             class="rounded-full px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">
                             Lihat Semua
-                        </a>
+                        </a> --}}
                     </div>
 
                     <div class="space-y-3">

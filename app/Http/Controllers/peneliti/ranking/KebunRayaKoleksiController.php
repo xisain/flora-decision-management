@@ -52,7 +52,6 @@ class KebunRayaKoleksiController extends Controller
             $alreadyExists = KebunRayaKoleksi::where('tanaman_id', $item['tanaman_id'])->exists();
 
             if (! $alreadyExists) {
-                // Simpan ke tabel koleksi (tanpa data flow)
                 KebunRayaKoleksi::create([
                     'tanaman_id' => $item['tanaman_id'],
                     'user_id' => $userId,
@@ -61,7 +60,6 @@ class KebunRayaKoleksiController extends Controller
                 $addedCount++;
             }
 
-            // Selalu simpan data flow ke pelaporan_promethee (sebagai histori)
             PelaporanPromethee::create([
                 'tanaman_id' => $item['tanaman_id'],
                 'inspeksi_tanaman_id' => $item['inspeksi_tanaman_id'],
@@ -83,9 +81,6 @@ class KebunRayaKoleksiController extends Controller
         return redirect()->route('peneliti.koleksi.index')->with('success', $message);
     }
 
-    /**
-     * Remove a plant from the botanical garden collection.
-     */
     public function destroy(string $id): RedirectResponse
     {
         $koleksi = KebunRayaKoleksi::findOrFail($id);
@@ -94,9 +89,7 @@ class KebunRayaKoleksiController extends Controller
         return redirect()->route('peneliti.koleksi.index')->with('success', 'Tanaman berhasil dihapus dari koleksi kebun raya.');
     }
 
-    /**
-     * Export the botanical garden collection to CSV (info tanaman saja, tanpa data flow).
-     */
+
     public function export(Request $request): StreamedResponse
     {
         $ids = $request->input('ids', []);

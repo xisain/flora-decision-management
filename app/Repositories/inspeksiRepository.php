@@ -97,7 +97,7 @@ class inspeksiRepository
         $checkup = $base()->whereNot($lulusStage('checkup'))->get();
         $labeling = $base()->where($lulusStage('checkup'))->whereNot($lulusStage('labeling'))->get();
         $aklimatisasi = $base()->where($lulusStage('labeling'))->whereNot($lulusStage('aklimatisasi'))->get();
-        $evaluasi = $base()->where($lulusStage('aklimatisasi'))->get();
+        $evaluasi = $base()->where($lulusStage('aklimatisasi'))->whereDoesntHave('inspeksiTanaman.nilaiCriteria')->get();
 
         $criteria = Criteria::with('ordinals')->active()->get();
         $oldPlants = old('plants', []);

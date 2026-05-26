@@ -14,7 +14,7 @@ class RankingService
     {
         $criterion = Criteria::active()->get();
 
-        $rows = InspeksiNilaiCriteria::with(['criteria', 'criteriaOrdinal'])
+        $rows = InspeksiNilaiCriteria::with(['criteria', 'criteriaOrdinal'])->whereDoesntHave('inspeksiTanaman.tanaman.koleksiKebunRaya')
             ->get();
 
         $grouped = $rows->groupBy('inspeksi_tanaman_id');
@@ -33,7 +33,7 @@ class RankingService
             }
 
             return [
-                // ini sebenarnya id inspeksi_tanaman, bukan tanaman_id
+
                 'tanaman_id' => $items->first()->inspeksi_tanaman_id,
                 'inspeksi_tanaman_id' => $inspeksiTanamanId,
                 'nilai' => $nilai,

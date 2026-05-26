@@ -370,7 +370,7 @@
             </div>
 
             {{-- Quick Actions --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            {{-- <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="mb-4">
                     <h2 class="text-sm font-semibold text-slate-900">
                         Aksi Cepat Admin
@@ -417,6 +417,6 @@
                         Tambah Tim
                     </a>
                 </div>
-            </div>
+            </div> --}}
         </div>
 @endsection
