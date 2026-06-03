@@ -16,11 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            TanamanInfoSainSeeder::class,
             roleSeeder::class,
-            tanamanInfoSeeders::class,
+            // tanamanInfoSeeders::class,
             CriteriaSeeder::class,
             CollectorSeeder::class,
+            ApplicationStateSeeder::class,
         ]);
-        User::factory(100)->create();
+        // User::factory(100)->create();
     }
 }

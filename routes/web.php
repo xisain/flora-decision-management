@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    return redirect()->route('login');
 })->name('home');
 Route::middleware('auth')->group(function () {
     Route::post('/sidebar/toggle', function (Request $request) {
