@@ -15,7 +15,8 @@
                         'nomor_akses' => $i->nomor_akses,
                         'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
                         'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-
+                        'redlist_category' => $i->tanamanPenerimaan->tanamanInfo->redlist_category,
+                        'endemisitas' => $i->tanamanPenerimaan->tanamanInfo->endemisitas,
                         // status terakhir dari inspeksi, fallback ke penyemaian
                         'status_terakhir' => $statusTerakhir,
                         'stage_terakhir' => $lastInspeksiTanaman?->inspeksi?->stage,
@@ -24,6 +25,7 @@
                 })
                 ->values();
         };
+
 
         $checkupData = $mapTanamanForInspeksi($checkup);
         $labelingData = $mapTanamanForInspeksi($labeling);
@@ -301,12 +303,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -351,12 +348,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -398,12 +390,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -445,12 +432,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -571,11 +553,14 @@
                                                                     <select
                                                                         :name="`plants[${plant.id}][kriteria][${kriteria.id}][nilai]`"
                                                                         x-model="plant.nilai_kriteria[kriteria.id]"
+                                                                        x-init="$nextTick(() => syncSelectValue($el, plant, kriteria))"
+                                                                        x-effect="$nextTick(() => syncSelectValue($el, plant, kriteria))"
                                                                         class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs ...">
                                                                         <option value="">-- pilih --</option>
                                                                         <template x-for="ordinal in kriteria.ordinals"
                                                                             :key="ordinal.id">
-                                                                            <option :value="ordinal.id"
+                                                                            <option :value="String(ordinal.id)"
+                                                                                :selected="String(plant.nilai_kriteria[kriteria.id] ?? '') === String(ordinal.id)"
                                                                                 x-text="ordinal.label + ' (' + ordinal.nilai + ')'">
                                                                             </option>
                                                                         </template>
@@ -735,6 +720,11 @@
                         return this[this.selectedStage] ?? []
                     },
 
+                    togglePlantById(plantId) {
+                        const plant = this.currentStageData.find(p => p.id === plantId)
+                        if (plant) this.togglePlant(plant)
+                    },
+
                     togglePlant(plant) {
                         const exists = this.selectedPlants.find(p => p.id === plant.id)
                         if (exists) {
@@ -742,7 +732,7 @@
                         } else {
                             const nilaiKriteria = {}
                             this.criteriaList.forEach(k => {
-                                nilaiKriteria[k.id] = ''
+                                nilaiKriteria[k.id] = this.defaultCriteriaValue(k, plant)
                             })
 
                             this.selectedPlants.push({
@@ -750,6 +740,11 @@
                                 status: '',
                                 label: '',
                                 tanggal_mati: '',
+                                nilai_kriteria: nilaiKriteria,
+                            })
+
+                            console.log('Tanaman dipilih untuk inspeksi', {
+                                plant,
                                 nilai_kriteria: nilaiKriteria,
                             })
                         }
@@ -764,13 +759,18 @@
 
                                     const nilaiKriteria = {}
                                     this.criteriaList.forEach(k => {
-                                        nilaiKriteria[k.id] = ''
+                                        nilaiKriteria[k.id] = this.defaultCriteriaValue(k, plant)
                                     })
                                     this.selectedPlants.push({
                                         ...plant,
                                         status: '',
                                         label: '', // ← tambah
                                         tanggal_mati: '', // ← tambah
+                                        nilai_kriteria: nilaiKriteria,
+                                    })
+
+                                    console.log('Tanaman dipilih untuk inspeksi', {
+                                        plant,
                                         nilai_kriteria: nilaiKriteria,
                                     })
                                 }
@@ -813,6 +813,51 @@
                         this.$nextTick(() => this.syncIndeterminate())
                     },
 
+                    defaultCriteriaValue(kriteria, plant) {
+                        if (kriteria.skala !== 'ordinal') return ''
+
+                        const name = (kriteria.nama_kriteria || '').toLowerCase()
+                        const label = name.includes('endemik') || name.includes('endemisitas')
+                            ? (plant.endemisitas || 'Tidak endemik')
+                            : (name.includes('status konservasi') || name.includes('endanger'))
+                                ? (plant.redlist_category || 'Melimpah')
+                                : null
+
+                        if (!label) return ''
+
+                        const ordinal = kriteria.ordinals.find(o => o.label === label)
+
+                        console.log('Autofill kriteria inspeksi', {
+                            tanaman_id: plant.id,
+                            nomor_akses: plant.nomor_akses,
+                            kriteria_id: kriteria.id,
+                            nama_kriteria: kriteria.nama_kriteria,
+                            endemisitas: plant.endemisitas,
+                            redlist_category: plant.redlist_category,
+                            label_dicari: label,
+                            ordinal_id: ordinal?.id ?? '',
+                            ordinal_options: kriteria.ordinals.map(o => ({
+                                id: o.id,
+                                label: o.label,
+                                nilai: o.nilai,
+                            })),
+                        })
+
+                        return ordinal ? String(ordinal.id) : ''
+                    },
+
+                    syncSelectValue(select, plant, kriteria) {
+                        const value = String(plant.nilai_kriteria[kriteria.id] ?? '')
+                        select.value = value
+
+                        console.log('Sinkron select autofill', {
+                            tanaman_id: plant.id,
+                            kriteria_id: kriteria.id,
+                            nama_kriteria: kriteria.nama_kriteria,
+                            value,
+                            selected_label: select.selectedOptions?.[0]?.textContent?.trim() ?? '',
+                        })
+                    },
                     nextStep() {
                         this.currentStep++
                     },

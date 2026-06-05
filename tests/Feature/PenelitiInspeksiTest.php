@@ -51,6 +51,42 @@ class PenelitiInspeksiTest extends TestCase
 
     }
 
+    public function test_form_evaluasi_memuat_data_untuk_autofill_endemisitas_dan_status_konservasi(): void
+    {
+        $tanaman = $this->buatTanamanDiStage('evaluasi');
+        $tanaman->tanamanPenerimaan->tanamanInfo->update([
+            'redlist_category' => 'Terancam',
+            'endemisitas' => 'Endemik di Bulungan',
+        ]);
+
+        $endemik = Criteria::factory()->ordinal()->create([
+            'nama_criteria' => 'Endemisitas',
+        ]);
+        CriteriaOrdinal::factory()->create([
+            'criteria_id' => $endemik->id,
+            'label' => 'Endemik di Bulungan',
+            'nilai' => 3,
+        ]);
+
+        $statusKonservasi = Criteria::factory()->ordinal()->create([
+            'nama_criteria' => 'Status Konservasi (Endanger)',
+        ]);
+        CriteriaOrdinal::factory()->create([
+            'criteria_id' => $statusKonservasi->id,
+            'label' => 'Terancam',
+            'nilai' => 4,
+        ]);
+
+        $response = $this->actingAs($this->peneliti)
+            ->get(route('peneliti.inspeksi.create'));
+
+        $response->assertOk();
+        $response->assertSee('Endemik di Bulungan');
+        $response->assertSee('Terancam');
+        $response->assertSee('togglePlantById', false);
+        $response->assertSee('defaultCriteriaValue', false);
+    }
+
     public function test_peneliti_bisa_membuat_inspeksi_checkup()
     {
         $tanaman = Tanaman::factory()->create();
@@ -89,7 +125,7 @@ class PenelitiInspeksiTest extends TestCase
                 [
                     'id' => $tanaman->id,
                     'status' => 'hidup',
-                    'label' => true
+                    'label' => true,
                 ],
             ],
         ];

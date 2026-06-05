@@ -22,14 +22,40 @@ class TanamanInfoSainSeederTest extends TestCase
             'suku' => 'Fabaceae',
             'spesies' => 'Archidendron clypearia',
             'author_name' => '(Jack) Kosterm.',
-            'redlist_category' => 'Least Concern',
+            'redlist_category' => 'Melimpah',
+            'endemisitas' => 'Tidak endemik',
         ]);
 
         $this->assertDatabaseHas('tanaman_infos', [
             'scientific_name' => 'Abarema tjendana (Kosterm.) Kosterm.',
-            'redlist_category' => 'Endangered',
+            'redlist_category' => 'Terancam',
+            'endemisitas' => 'Tidak endemik',
+        ]);
+
+        $this->assertDatabaseHas('tanaman_infos', [
+            'scientific_name' => 'Brownlowia ferruginea Kosterm.',
+            'redlist_category' => 'Terancam',
+            'endemisitas' => 'Endemik di Bulungan',
         ]);
 
         $this->assertSame(33720, DB::table('tanaman_infos')->count());
+
+        $this->assertSame(
+            ['Hampir Terancam', 'Kritis', 'Melimpah', 'Rentan', 'Terancam'],
+            DB::table('tanaman_infos')
+                ->distinct()
+                ->orderBy('redlist_category')
+                ->pluck('redlist_category')
+                ->all()
+        );
+
+        $this->assertSame(
+            ['Endemik di Bulungan', 'Endemik di Indonesia', 'Tidak endemik'],
+            DB::table('tanaman_infos')
+                ->distinct()
+                ->orderBy('endemisitas')
+                ->pluck('endemisitas')
+                ->all()
+        );
     }
 }

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Criteria;
 use App\Models\CriteriaOrdinal;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class CriteriaSeeder extends Seeder
 {
@@ -27,26 +27,26 @@ class CriteriaSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        CriteriaOrdinal::truncate();
-        Criteria::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::withoutForeignKeyConstraints(function (): void {
+            CriteriaOrdinal::truncate();
+            Criteria::truncate();
+        });
 
         $criterias = [
 
             // ─── 1. KESEHATAN (ordinal, benefit) ─────────────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Tingkat Kesehatan',
-                    'satuan'              => null,
-                    'bobot'               => 0.03,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
+                    'nama_criteria' => 'Tingkat Kesehatan',
+                    'satuan' => null,
+                    'bobot' => 0.06,
+                    'tipe' => 'benefit',
+                    'skala' => 'ordinal',
                     'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [
                     // semakin tinggi urutan → semakin baik
@@ -61,16 +61,16 @@ class CriteriaSeeder extends Seeder
             // ─── 2. UMUR (numerik, benefit) ──────────────────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Umur',
-                    'satuan'              => 'Tahun',
-                    'bobot'               => 0.05,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'numerik',
-                    'preference_function' => 'linear',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'nama_criteria' => 'Umur',
+                    'satuan' => 'Tahun',
+                    'bobot' => 0.06,
+                    'tipe' => 'benefit',
+                    'skala' => 'numerik',
+                    'preference_function' => 'usual',
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [],
             ],
@@ -78,16 +78,16 @@ class CriteriaSeeder extends Seeder
             // ─── 3. TINGGI (numerik, benefit) ────────────────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Tinggi',
-                    'satuan'              => 'cm',
-                    'bobot'               => 0.04,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'numerik',
-                    'preference_function' => 'linear',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'nama_criteria' => 'Tinggi',
+                    'satuan' => 'cm',
+                    'bobot' => 0.06,
+                    'tipe' => 'benefit',
+                    'skala' => 'numerik',
+                    'preference_function' => 'usual',
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [],
             ],
@@ -95,37 +95,37 @@ class CriteriaSeeder extends Seeder
             // ─── 4. LEGALITAS (ordinal, benefit) ─────────────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Legalitas',
-                    'satuan'              => null,
-                    'bobot'               => 0.02,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
+                    'nama_criteria' => 'Legalitas',
+                    'satuan' => null,
+                    'bobot' => 0.06,
+                    'tipe' => 'benefit',
+                    'skala' => 'ordinal',
                     'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [
                     ['label' => 'Tidak memiliki legalitas',      'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
                     ['label' => 'Legalitas sebagian',            'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
-                    ['label' => 'Legalitas lengkap & izin resmi','nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
+                    ['label' => 'Legalitas lengkap & izin resmi', 'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
                 ],
             ],
 
             // ─── 5. LINGKARAN BATANG (numerik, benefit) ──────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Lingkaran Batang',
-                    'satuan'              => 'cm',
-                    'bobot'               => 0.04,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'numerik',
-                    'preference_function' => 'linear',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'nama_criteria' => 'Lingkaran Batang',
+                    'satuan' => 'cm',
+                    'bobot' => 0.06,
+                    'tipe' => 'benefit',
+                    'skala' => 'numerik',
+                    'preference_function' => 'usual',
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [],
             ],
@@ -140,62 +140,62 @@ class CriteriaSeeder extends Seeder
             // ─── 7. ENDEMIK (ordinal, benefit) ───────────────────────────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Endemik',
-                    'satuan'              => null,
-                    'bobot'               => 0.07,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
+                    'nama_criteria' => 'Endemisitas',
+                    'satuan' => null,
+                    'bobot' => 0.10,
+                    'tipe' => 'benefit',
+                    'skala' => 'ordinal',
                     'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [
-                    ['label' => 'Tidak endemik',           'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
-                    ['label' => 'Endemik regional',        'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
-                    ['label' => 'Endemik sangat terbatas', 'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
+                    ['label' => 'Tidak endemik',          'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
+                    ['label' => 'Endemik di Indonesia',   'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
+                    ['label' => 'Endemik di Bulungan',    'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
                 ],
             ],
 
             // ─── 8. PRIORITAS DIPERBANYAK (ordinal, benefit) ─────────────────
-            [
-                'criteria' => [
-                    'nama_criteria'       => 'Prioritas Diperbanyak',
-                    'satuan'              => null,
-                    'bobot'               => 0.20,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
-                    'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
-                ],
-                'ordinals' => [
-                    ['label' => 'Tidak perlu',           'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
-                    ['label' => 'Kurang',                'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
-                    ['label' => 'Cukup',                 'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
-                    ['label' => 'Perlu diperbanyak',     'nilai' => 4, 'urutan' => 4, 'operator' => 'eq'],
-                    ['label' => 'Sangat perlu diperbanyak', 'nilai' => 5, 'urutan' => 5, 'operator' => 'eq'],
-                ],
-            ],
+            // [
+            //     'criteria' => [
+            //         'nama_criteria' => 'Prioritas Diperbanyak',
+            //         'satuan' => null,
+            //         'bobot' => 0.20,
+            //         'tipe' => 'benefit',
+            //         'skala' => 'ordinal',
+            //         'preference_function' => 'usual',
+            //         'param_q' => null,
+            //         'param_p' => null,
+            //         'param_sigma' => null,
+            //         'is_active' => true,
+            //     ],
+            //     'ordinals' => [
+            //         ['label' => 'Tidak perlu',           'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
+            //         ['label' => 'Kurang',                'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
+            //         ['label' => 'Cukup',                 'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
+            //         ['label' => 'Perlu diperbanyak',     'nilai' => 4, 'urutan' => 4, 'operator' => 'eq'],
+            //         ['label' => 'Sangat perlu diperbanyak', 'nilai' => 5, 'urutan' => 5, 'operator' => 'eq'],
+            //     ],
+            // ],
 
             // ─── 9. TINGGAL SATU (numerik, benefit) ──────────────────────────
             // Mewakili jumlah individu tersisa; semakin sedikit → semakin prioritas
             // → tipe 'cost' agar nilai rendah = lebih baik
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Tinggal Satu',
-                    'satuan'              => 'Individu',
-                    'bobot'               => 0.15,
-                    'tipe'                => 'cost',
-                    'skala'               => 'numerik',
-                    'preference_function' => 'linear',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'nama_criteria' => 'Tinggal Satu',
+                    'satuan' => 'Individu',
+                    'bobot' => 0.18,
+                    'tipe' => 'cost',
+                    'skala' => 'numerik',
+                    'preference_function' => 'usual',
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [],
             ],
@@ -203,24 +203,24 @@ class CriteriaSeeder extends Seeder
             // ─── 10. ENDANGER / STATUS KONSERVASI (ordinal, benefit) ──────────
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Status Konservasi (Endanger)',
-                    'satuan'              => null,
-                    'bobot'               => 0.10,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
+                    'nama_criteria' => 'Status Konservasi (Endanger)',
+                    'satuan' => null,
+                    'bobot' => 0.12,
+                    'tipe' => 'benefit',
+                    'skala' => 'ordinal',
                     'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [
-                    // Urutan dari ancaman terendah → tertinggi
-                    ['label' => 'Least Concern',        'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
-                    ['label' => 'Near Threatened',      'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
-                    ['label' => 'Vulnerable',           'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
-                    ['label' => 'Endangered',           'nilai' => 4, 'urutan' => 4, 'operator' => 'eq'],
-                    ['label' => 'Critically Endangered','nilai' => 5, 'urutan' => 5, 'operator' => 'eq'],
+                    // Urutan dari ancaman terendah ke tertinggi.
+                    ['label' => 'Melimpah',          'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
+                    ['label' => 'Hampir Terancam',   'nilai' => 2, 'urutan' => 2, 'operator' => 'eq'],
+                    ['label' => 'Rentan',            'nilai' => 3, 'urutan' => 3, 'operator' => 'eq'],
+                    ['label' => 'Terancam',          'nilai' => 4, 'urutan' => 4, 'operator' => 'eq'],
+                    ['label' => 'Kritis',            'nilai' => 5, 'urutan' => 5, 'operator' => 'eq'],
                 ],
             ],
 
@@ -228,16 +228,16 @@ class CriteriaSeeder extends Seeder
             // Apakah tanaman ini belum ada di koleksi kebun → bobot tertinggi 0.30
             [
                 'criteria' => [
-                    'nama_criteria'       => 'Belum Ada di Koleksi',
-                    'satuan'              => null,
-                    'bobot'               => 0.30,
-                    'tipe'                => 'benefit',
-                    'skala'               => 'ordinal',
+                    'nama_criteria' => 'Belum Ada di Koleksi',
+                    'satuan' => null,
+                    'bobot' => 0.30,
+                    'tipe' => 'benefit',
+                    'skala' => 'ordinal',
                     'preference_function' => 'usual',
-                    'param_q'             => null,
-                    'param_p'             => null,
-                    'param_sigma'         => null,
-                    'is_active'           => true,
+                    'param_q' => null,
+                    'param_p' => null,
+                    'param_sigma' => null,
+                    'is_active' => true,
                 ],
                 'ordinals' => [
                     ['label' => 'Sudah ada di koleksi',         'nilai' => 1, 'urutan' => 1, 'operator' => 'eq'],
@@ -251,12 +251,12 @@ class CriteriaSeeder extends Seeder
 
             foreach ($item['ordinals'] as $ordinal) {
                 $criteria->ordinals()->create([
-                    'label'      => $ordinal['label'],
-                    'nilai'      => $ordinal['nilai'],
-                    'urutan'     => $ordinal['urutan'],
-                    'operator'   => $ordinal['operator'],
+                    'label' => $ordinal['label'],
+                    'nilai' => $ordinal['nilai'],
+                    'urutan' => $ordinal['urutan'],
+                    'operator' => $ordinal['operator'],
                     'range_from' => $ordinal['range_from'] ?? null,
-                    'range_to'   => $ordinal['range_to'] ?? null,
+                    'range_to' => $ordinal['range_to'] ?? null,
                 ]);
             }
         }
