@@ -24,7 +24,7 @@
             </a>
 
             {{-- Penerimaan --}}
-            <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
+            {{-- <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -32,10 +32,10 @@
                     :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
                     Penerimaan
                 </span>
-            </a>
+            </a> --}}
 
             {{-- Penyemaian --}}
-            <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
+            {{-- <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
@@ -43,17 +43,17 @@
                     :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
                     Penyemaian
                 </span>
-            </a>
+            </a> --}}
 
-            <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            {{-- <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}" --}}
+                {{-- class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('*.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
                     :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
                     Inspeksi
                 </span>
-            </a>
+            </a> --}}
             {{-- User --}}
             <a href="{{ Route::has('user.index') ? route('user.index') : '#' }}"
                 class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('user.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
@@ -62,6 +62,15 @@
                 <span class="ml-3 transition-opacity duration-200"
                     :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
                     User
+                </span>
+            </a>
+            <a href="{{ Route::has('collector.index') ? route('collector.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('collector.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-user-gear" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Collector
                 </span>
             </a>
             {{-- Tim --}}

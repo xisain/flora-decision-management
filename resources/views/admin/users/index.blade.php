@@ -184,10 +184,10 @@
                                 {{-- Actions --}}
                                 <td class="px-5 py-4 text-center">
                                     <div class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                                        <a href="{{ route('user.show', $user->id) }}" title="Detail"
+                                        {{-- <a href="{{ route('user.show', $user->id) }}" title="Detail"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
                                             <i class="fa-solid fa-eye text-xs"></i>
-                                        </a>
+                                        </a> --}}
                                         <a href="{{ route('user.edit', $user->id) }}" title="Edit"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
                                             <i class="fa-solid fa-pen text-xs"></i>
