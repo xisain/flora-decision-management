@@ -10,50 +10,100 @@ use App\Models\Tanaman;
 
 class inspeksiRepository
 {
-    public function all()
+    public function all($request)
     {
-        return Inspeksi::all();
+        $data = Inspeksi::query()
+            ->with(['user', 'inspeksiTanaman'])
+            ->when($request->filled('tanggal_inspeksi_dari'), function ($query) use ($request) {
+                $query->whereDate('tanggal_inspeksi', '>=', $request->tanggal_inspeksi_dari);
+            })
+            ->when($request->filled('tanggal_inspeksi_sampai'), function ($query) use ($request) {
+                $query->whereDate('tanggal_inspeksi', '<=', $request->tanggal_inspeksi_sampai);
+            })
+            ->when($request->filled('stage'), function ($query) use ($request) {
+                $query->where('stage', $request->stage);
+            })
+            ->latest('tanggal_inspeksi')
+            ->paginate(10)
+            ->withQueryString();
+
+        return compact('data');
     }
 
     public function stage()
     {
-        $checkup = Tanaman::with(['tanamanPenerimaan', 'penyemaianTanaman'])
-            ->has('penyemaianTanaman')
-            ->whereDoesntHave('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'checkup');
-            })
-            ->get();
-        $labeling = Tanaman::with(['tanamanPenerimaan', 'penyemaianTanaman'])
-            ->whereDoesntHave('inspeksiTanaman', function ($q) {
-                $q->where('status', 'mati');
-            })
-            ->has('penyemaianTanaman')->whereHas('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'checkup');
-            })
-            ->whereDoesntHave('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'labeling');
-            })
-            ->get();
-        $aklimatisasi = Tanaman::with('tanamanPenerimaan')->has('penyemaianTanaman')
-            ->whereHas('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'labeling');
-            })
-            ->whereDoesntHave('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'aklimatisasi');
-            })
-            ->get();
-        $evaluasi = Tanaman::with('tanamanPenerimaan')->has('penyemaianTanaman')
-            ->whereHas('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'aklimatisasi');
-            })
-            ->whereDoesntHave('inspeksiTanaman.inspeksi', function ($query) {
-                $query->where('stage', 'evaluasi');
-            })
-            ->get();
+        // Helper: status inspeksi TERAKHIR di stage tertentu = 'hidup'
+        $lulusStage = function (string $stage) {
+            return function ($q) use ($stage) {
+                $q->whereHas('inspeksiTanaman', function ($it) use ($stage) {
+                    $it->where('status', 'hidup')
+                        ->whereHas('inspeksi', function ($i) use ($stage) {
+                            $i->where('stage', $stage)
+                                ->whereRaw('tanggal_inspeksi = (
+                                SELECT MAX(i2.tanggal_inspeksi)
+                                FROM inspeksis i2
+                                INNER JOIN inspeksi_tanaman it2 ON it2.inspeksi_id = i2.id
+                                WHERE it2.tanaman_id = inspeksi_tanaman.tanaman_id
+                                  AND i2.stage = ?
+                            )', [$stage]);
+                        });
+                });
+            };
+        };
+
+        // Helper: status inspeksi TERAKHIR di stage tertentu != 'hidup' (atau belum pernah)
+        $belumLulusStage = function (string $stage) {
+            return function ($q) use ($stage) {
+                $q->whereDoesntHave('inspeksiTanaman.inspeksi', fn ($i) => $i->where('stage', $stage))
+                    ->orWhere(function ($q) use ($stage) {
+                        $q->whereHas('inspeksiTanaman', function ($it) use ($stage) {
+                            $it->where('status', '!=', 'hidup')
+                                ->whereHas('inspeksi', function ($i) use ($stage) {
+                                    $i->where('stage', $stage)
+                                        ->whereRaw('tanggal_inspeksi = (
+                                  SELECT MAX(i2.tanggal_inspeksi)
+                                  FROM inspeksis i2
+                                  INNER JOIN inspeksi_tanaman it2 ON it2.inspeksi_id = i2.id
+                                  WHERE it2.tanaman_id = inspeksi_tanaman.tanaman_id
+                                    AND i2.stage = ?
+                              )', [$stage]);
+                                });
+                        })
+                            ->whereDoesntHave('inspeksiTanaman', function ($it) use ($stage) {
+                                $it->where('status', 'hidup')
+                                    ->whereHas('inspeksi', function ($i) use ($stage) {
+                                        $i->where('stage', $stage)
+                                            ->whereRaw('tanggal_inspeksi = (
+                                  SELECT MAX(i2.tanggal_inspeksi)
+                                  FROM inspeksis i2
+                                  INNER JOIN inspeksi_tanaman it2 ON it2.inspeksi_id = i2.id
+                                  WHERE it2.tanaman_id = inspeksi_tanaman.tanaman_id
+                                    AND i2.stage = ?
+                              )', [$stage]);
+                                    });
+                            });
+                    });
+            };
+        };
+
+        $with = [
+            'tanamanPenerimaan.tanamanInfo',
+            'penyemaianTanaman',
+            'inspeksiTanaman.inspeksi',
+        ];
+
+        $base = fn () => Tanaman::with($with)->has('penyemaianTanaman');
+
+        $checkup = $base()->whereNot($lulusStage('checkup'))->get();
+        $labeling = $base()->where($lulusStage('checkup'))->whereNot($lulusStage('labeling'))->get();
+        $aklimatisasi = $base()->where($lulusStage('labeling'))->whereNot($lulusStage('aklimatisasi'))->get();
+        $evaluasi = $base()->where($lulusStage('aklimatisasi'))->whereDoesntHave('inspeksiTanaman.nilaiCriteria')->get();
+
         $criteria = Criteria::with('ordinals')->active()->get();
+        $oldPlants = old('plants', []);
+        $oldStage = old('stage', 'checkup');
 
-        return compact('checkup', 'criteria', 'labeling', 'aklimatisasi', 'evaluasi');
-
+        return compact('checkup', 'criteria', 'labeling', 'aklimatisasi', 'evaluasi', 'oldPlants', 'oldStage');
     }
 
     public function findInspeksiDetail(string $id)

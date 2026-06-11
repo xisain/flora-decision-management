@@ -4,11 +4,13 @@ namespace App\Services\peneliti\penyemaian;
 
 use App\Models\Penyemaian;
 use App\Models\TanamanStatusLogs;
+use App\Services\peneliti\TanamanLoggingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class penyemaianService
 {
+    public function __construct(private TanamanLoggingService $tls){}
     public function store(array $validated): void
     {
         Log::info('penyemaianService@store dimulai', [
@@ -38,7 +40,6 @@ class penyemaianService
             'penyemaian_id' => $penyemaian->id,
             'tanaman_ids' => $validated['tanaman'],
         ]);
-
         $statusLogs = collect($validated['tanaman'])->map(fn ($id) => [
             'tanaman_id' => $id,
             'stage' => 'penyemaian',
@@ -48,8 +49,9 @@ class penyemaianService
             'tanggal_proses' => $validated['tanggal_penyemaian'],
             'created_at' => now(),
             'updated_at' => now(),
-        ])->toArray();
+            ])->toArray();
 
+        $this->tls->store($statusLogs);
         TanamanStatusLogs::insert($statusLogs);
 
         Log::info('TanamanStatusLogs berhasil diinsert', [

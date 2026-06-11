@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Models\Criteria;
 use App\Services\peneliti\algorithm\PrometheeIIService;

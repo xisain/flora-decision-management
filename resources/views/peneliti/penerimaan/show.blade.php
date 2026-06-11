@@ -63,7 +63,7 @@
             {{-- Tim Eksplorasi --}}
             <div class="rounded-2xl border border-[#d8e8d8] bg-white p-6 shadow-sm">
                 <div class="mb-4 flex items-center gap-2">
-                    <div class="h-1 w-6 rounded-full bg-[#52a870]"></div>
+
                     <h2 class="text-base font-bold uppercase tracking-widest text-[#1a3a2a]">Tim Explorasi</h2>
                 </div>
 
@@ -114,7 +114,6 @@
             {{-- Legal Documents --}}
             <div class="rounded-2xl border border-[#d8e8d8] bg-white p-6 shadow-sm">
                 <div class="mb-4 flex items-center gap-2">
-                    <div class="h-1 w-6 rounded-full bg-[#e0a458]"></div>
                     <h2 class="text-base font-bold uppercase tracking-widest text-[#1a3a2a]">Legal Documents</h2>
                 </div>
 
@@ -152,7 +151,7 @@
             <div class="rounded-2xl border border-[#d8e8d8] bg-white shadow-sm">
                 <div class="flex items-center justify-between border-b border-[#eef4ef] px-6 py-4">
                     <div class="flex items-center gap-2">
-                        <div class="h-1 w-6 rounded-full bg-[#2d6a4f]"></div>
+
                         <h2 class="text-base font-bold uppercase tracking-widest text-[#1a3a2a]">Plant List</h2>
                     </div>
                     <span class="rounded-full bg-[#eef7f1] px-3 py-1 text-xs font-bold text-[#2d6a4f]">

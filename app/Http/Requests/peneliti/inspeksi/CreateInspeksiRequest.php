@@ -29,6 +29,8 @@ class CreateInspeksiRequest extends FormRequest
             'plants.*' => ['required', 'array', 'min:1'],
             'plants.*.id' => ['required', 'exists:tanaman,id'],
             'plants.*.status' => ['required', 'string'],
+            'plants.*.tanggal_mati' => ['required_if:plants.*.status,mati'],
+            'plants.*.label' => ['required_if:stage,labeling'],
             'plants.*.kriteria' => ['required_if:stage,evaluasi', 'array'],
             'plants.*.kriteria.*.nilai' => ['required_if:stage,evaluasi'],
             'plants.*.kriteria.*.skala' => ['required_if:stage,evaluasi', 'in:numerik,ordinal'],

@@ -34,6 +34,13 @@ class PenelitiPenerimaanTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('penerimaan');
     }
+    public function test_peneliti_bisa_melihat_view_buat_penerimaan(){
+        $collector = CollectorInfo::factory()->create();
+        $team = TimExplorasi::factory()->create();
+        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penerimaan.create'));
+        $response->assertStatus(200);
+        $response->assertViewHasAll(['collector', 'team']);
+    }
 
     public function test_peneliti_bisa_membuat_penerimaan_tanaman()
     {
@@ -47,8 +54,8 @@ class PenelitiPenerimaanTest extends TestCase
                 [
                     'namaSurat' => 'Surat Pengantar',
                     'nomorSurat' => '123/SP/2026',
-                    'fileSurat' => $file
-                ]
+                    'fileSurat' => $file,
+                ],
             ],
             'tanggal_penerimaan' => '2026-05-14',
             'tanggal_explorasi' => '2026-05-10',
@@ -85,18 +92,18 @@ class PenelitiPenerimaanTest extends TestCase
                     'collector_id' => $collector->id,
                     'locality' => 'Hutan C',
                     'vak_no' => 'VAK-1',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->actingAs($this->peneliti)->post(route('peneliti.penerimaan.store'), $data);
 
         $response->assertRedirect(route('peneliti.penerimaan.index'));
         $this->assertDatabaseHas('penerimaans', [
-            'tempat_asal' => 'Hutan Lindung'
+            'tempat_asal' => 'Hutan Lindung',
         ]);
         $this->assertDatabaseHas('tanaman_infos', [
-            'scientific_name' => 'Shorea leprosula'
+            'scientific_name' => 'Shorea leprosula',
         ]);
     }
 
@@ -110,5 +117,40 @@ class PenelitiPenerimaanTest extends TestCase
         $response = $this->actingAs($this->peneliti)->post(route('peneliti.penerimaan.store'), $data);
 
         $response->assertSessionHasErrors(['tanggal_explorasi', 'jenis_form', 'tempat_asal']);
+    }
+
+    public function test_peneliti_bisa_menghapus_penerimaan()
+    {
+        $penerimaan = Penerimaan::factory()->create([
+            'user_id' => $this->peneliti->id,
+        ]);
+
+        $this->assertDatabaseHas('penerimaans', [
+            'id' => $penerimaan->id,
+        ]);
+
+        $response = $this
+            ->actingAs($this->peneliti)
+            ->from(route('peneliti.penerimaan.index'))
+            ->delete(route('peneliti.penerimaan.destroy', $penerimaan->id));
+
+        $response->assertRedirect(route('peneliti.penerimaan.index'));
+
+        $response->assertSessionHas('success', 'Data berhasil dihapus');
+
+        $this->assertDatabaseMissing('penerimaans', [
+            'id' => $penerimaan->id,
+        ]);
+
+    }
+
+    public function test_peneliti_bisa_melihat_detail_penerimaan()
+    {
+        $penerimaan = Penerimaan::factory()->create();
+        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penerimaan.show', $penerimaan->id));
+        $response->assertStatus(200);
+        $response->assertViewHas('data');
+        $this->assertDatabaseHas('penerimaans', [
+            'id' => $penerimaan->id]);
     }
 }

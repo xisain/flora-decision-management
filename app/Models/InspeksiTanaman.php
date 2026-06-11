@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable('inspeksi_id', 'tanaman_id', 'status', 'catatan')]
+#[Fillable('inspeksi_id', 'tanaman_id', 'status', 'catatan', 'labeling','tanggal_mati')]
 #[Table('inspeksi_tanaman')]
 class InspeksiTanaman extends Model
 {

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Penyemaian;
 use App\Models\Tanaman;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class penyemaianRepository
 {
@@ -16,10 +17,30 @@ class penyemaianRepository
 
     public function show($id)
     {
-        $data = Penyemaian::with('penyemaianTanaman.Tanaman.tanamanPenerimaan.TanamanInfo')->find($id);
+        $data = Penyemaian::with([
+            'penyemaianTanaman.Tanaman.tanamanPenerimaan.TanamanInfo',
+            'user',
+        ])->findOrFail($id);
 
-        return $data;
+        $groupedTanaman = $data->penyemaianTanaman->groupBy(function ($item) {
+            return $item->Tanaman?->tanamanPenerimaan?->TanamanInfo?->scientific_name ?? 'Tanpa Nama';
+        });
 
+        $perPage = 10;
+        $currentPage = request()->get('page', 1);
+
+        $groupedTanamanPaginated = new LengthAwarePaginator(
+            $groupedTanaman->forPage($currentPage, $perPage),
+            $groupedTanaman->count(),
+            $perPage,
+            $currentPage,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
+
+        return compact('data', 'groupedTanaman', 'groupedTanamanPaginated');
     }
 
     public function create()

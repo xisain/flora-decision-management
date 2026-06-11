@@ -24,8 +24,8 @@
             </a>
 
             {{-- Penerimaan --}}
-            <a href="{{ Route::has('penerimaan.index') ? route('penerimaan.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -35,8 +35,8 @@
             </a>
 
             {{-- Penyemaian --}}
-            <a href="{{ Route::has('penyemaian.index') ? route('penyemaian.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -45,8 +45,8 @@
                 </span>
             </a>
 
-            <a href="#"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 text-gray-900 hover:bg-gray-100"
+            <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
                 <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
                 <span class="ml-3 transition-opacity duration-200"
@@ -54,7 +54,41 @@
                     Inspeksi
                 </span>
             </a>
+
+            {{-- Ranking --}}
+            <a href="{{ Route::has('peneliti.ranking.index') ? route('peneliti.ranking.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.ranking.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-chart-bar" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Perankingan
+                </span>
+            </a>
+
+            {{-- Koleksi Kebun Raya --}}
+            <a href="{{ Route::has('peneliti.koleksi.index') ? route('peneliti.koleksi.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.koleksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-leaf" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Koleksi Kebun Raya
+                </span>
+            </a>
+
+            {{-- Pelaporan PROMETHEE II --}}
+            <a href="{{ Route::has('peneliti.pelaporan.index') ? route('peneliti.pelaporan.index') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.pelaporan.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                <i class="fa-solid fa-chart-column" :class="{ 'text-lg': !sidebarOpen }"></i>
+                <span class="ml-3 transition-opacity duration-200"
+                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                    Pelaporan
+                </span>
+            </a>
         </nav>
+
     </div>
 
     {{-- User Profile & Logout --}}

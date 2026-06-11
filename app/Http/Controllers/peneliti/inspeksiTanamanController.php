@@ -20,10 +20,9 @@ class inspeksiTanamanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data= $this->inspeksiRepository->all();
-        return view('peneliti.inspeksi.index', compact('data'));
+        return view('peneliti.inspeksi.index',   $this->inspeksiRepository->all($request));
     }
 
     /**
@@ -40,6 +39,7 @@ class inspeksiTanamanController extends Controller
      */
     public function store(CreateInspeksiRequest $request)
     {
+        // dump($request->all());
         $this->inspeksiservice->store($request->validated());
         return Redirect()->route('peneliti.inspeksi.index')->with('success', 'data berhasil disimpan');
 

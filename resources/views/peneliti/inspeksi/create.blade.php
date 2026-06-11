@@ -1,48 +1,37 @@
 @extends('layout.admin')
 @section('content')
     @php
-        $checkupData = $checkup
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+        $mapTanamanForInspeksi = function ($items) {
+            return $items
+                ->map(function ($i) {
+                    $lastInspeksiTanaman = $i->inspeksiTanaman
+                        ->sortByDesc(fn($row) => $row->inspeksi?->tanggal_inspeksi)
+                        ->first();
 
-        $labelingData = $labeling
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
-        $AklimatisasiData = $aklimatisasi
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+                    $statusTerakhir = $lastInspeksiTanaman?->status ?? $i->penyemaianTanaman->first()?->status;
 
-        $evaluasiData = $evaluasi
-            ->map(function ($i) {
-                return [
-                    'id' => $i->id,
-                    'nomor_akses' => $i->nomor_akses,
-                    'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
-                    'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
-                ];
-            })
-            ->values();
+                    return [
+                        'id' => $i->id,
+                        'nomor_akses' => $i->nomor_akses,
+                        'scientific_name' => $i->tanamanPenerimaan->tanamanInfo->scientific_name,
+                        'author_name' => $i->tanamanPenerimaan->tanamanInfo->author_name,
+                        'redlist_category' => $i->tanamanPenerimaan->tanamanInfo->redlist_category,
+                        'endemisitas' => $i->tanamanPenerimaan->tanamanInfo->endemisitas,
+                        // status terakhir dari inspeksi, fallback ke penyemaian
+                        'status_terakhir' => $statusTerakhir,
+                        'stage_terakhir' => $lastInspeksiTanaman?->inspeksi?->stage,
+                        'tanggal_mati' => $lastInspeksiTanaman?->tanggal_mati,
+                    ];
+                })
+                ->values();
+        };
+
+
+        $checkupData = $mapTanamanForInspeksi($checkup);
+        $labelingData = $mapTanamanForInspeksi($labeling);
+        $AklimatisasiData = $mapTanamanForInspeksi($aklimatisasi);
+        $evaluasiData = $mapTanamanForInspeksi($evaluasi);
+
         $criteriaData = $criteria
             ->map(
                 fn($c) => [
@@ -83,7 +72,7 @@
         </div>
         {{-- {{ $data }} --}}
         <form action="{{ route('peneliti.inspeksi.store') }}" method="POST" class="px-6 py-6 space-y-6"
-            x-data="inspeksiForm()">
+            x-data="inspeksiForm(@js(old('plants', [])), @js(old('stage', 'checkup')))">
             <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -314,12 +303,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -328,18 +312,23 @@
                                             <td class="px-4 py-3 italic text-gray-700">
                                                 {{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}</td>
                                             <td class="px-4 py-3 text-gray-600">
-                                                {{ $item->tanamanPenerimaan->tanamanInfo->author_name }}</td>
+                                                {{ $item->tanamanPenerimaan->tanamanInfo->author_name }} </td>
                                             <td class="px-4 py-3">
-                                                @php $status = $item->penyemaianTanaman->first()?->status @endphp
+                                                @php
+                                                    $lastInspeksiTanaman = $item->inspeksiTanaman
+                                                        ->sortByDesc(fn($row) => $row->inspeksi?->tanggal_inspeksi)
+                                                        ->first();
+
+                                                    $status =
+                                                        $lastInspeksiTanaman?->status ??
+                                                        $item->penyemaianTanaman->first()?->status;
+
+                                                    $stageTerakhir = $lastInspeksiTanaman?->inspeksi?->stage;
+                                                @endphp
+
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            {{ $status === 'hidup'
-                                ? 'bg-green-100 text-green-700'
-                                : ($status === 'mati'
-                                    ? 'bg-red-100 text-red-700'
-                                    : ($status === 'recovery'
-                                        ? 'bg-yellow-100 text-yellow-700'
-                                        : 'bg-gray-100 text-gray-600')) }}">
+                                                    {{ $status === 'hidup' ? 'bg-green-100 text-green-700' : ($status === 'mati'? 'bg-red-100 text-red-700': ($status === 'recovery'? 'bg-yellow-100 text-yellow-700': 'bg-gray-100 text-gray-600')) }}">
                                                     {{ Str::upper($status ?? '-') }}
                                                 </span>
                                             </td>
@@ -359,12 +348,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -406,12 +390,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -453,12 +432,7 @@
                                             :class="selectedPlants.some(p => p.id === {{ $item->id }}) ? 'bg-green-50' : ''">
                                             <td class="px-4 py-3">
                                                 <input type="checkbox"
-                                                    @change="togglePlant({
-                                                        id: {{ $item->id }},
-                                                        nomor_akses: '{{ $item->nomor_akses }}',
-                                                        scientific_name: '{{ $item->tanamanPenerimaan->tanamanInfo->scientific_name }}',
-                                                        author_name: '{{ $item->tanamanPenerimaan->tanamanInfo->author_name }}'
-                                                    })"
+                                                    @change="togglePlantById({{ $item->id }})"
                                                     :checked="selectedPlants.some(p => p.id === {{ $item->id }})"
                                                     class="rounded border-gray-300 text-[var(--flora-moss)] focus:ring-[var(--flora-moss)]">
                                             </td>
@@ -495,7 +469,6 @@
                         </div>
                     </div>
 
-                    {{-- STEP 2 --}}
                     {{-- STEP 2 --}}
                     <div x-show="currentStep === 2" x-transition>
                         <div class="mb-4">
@@ -580,11 +553,14 @@
                                                                     <select
                                                                         :name="`plants[${plant.id}][kriteria][${kriteria.id}][nilai]`"
                                                                         x-model="plant.nilai_kriteria[kriteria.id]"
+                                                                        x-init="$nextTick(() => syncSelectValue($el, plant, kriteria))"
+                                                                        x-effect="$nextTick(() => syncSelectValue($el, plant, kriteria))"
                                                                         class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs ...">
                                                                         <option value="">-- pilih --</option>
                                                                         <template x-for="ordinal in kriteria.ordinals"
                                                                             :key="ordinal.id">
-                                                                            <option :value="ordinal.id"
+                                                                            <option :value="String(ordinal.id)"
+                                                                                :selected="String(plant.nilai_kriteria[kriteria.id] ?? '') === String(ordinal.id)"
                                                                                 x-text="ordinal.label + ' (' + ordinal.nilai + ')'">
                                                                             </option>
                                                                         </template>
@@ -618,10 +594,10 @@
                                                 </p>
                                                 <p class="text-sm text-gray-500" x-text="plant.author_name"></p>
                                             </div>
-                                            <div class="w-52">
+                                            <div>
                                                 <label class="block text-sm mb-1">Status</label>
                                                 <select x-model="plant.status" :name="`plants[${plant.id}][status]`"
-                                                    class="w-full border rounded-xl px-3 py-2">
+                                                    class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800">
                                                     <option value="">Pilih Status</option>
                                                     <option value="hidup">Hidup</option>
                                                     <option value="mati">Mati</option>
@@ -629,25 +605,26 @@
                                                     <option value="dormant">Dormant</option>
                                                 </select>
                                             </div>
-                                        </div>
-
-                                        {{-- CHECKUP --}}
-                                        <template x-if="selectedStage === 'checkup'">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label class="block text-sm mb-1">Label Tanaman</label>
-                                                    <input type="text" :name="`plants[${plant.id}][label]`"
-                                                        class="w-full border rounded-xl px-3 py-2">
+                                            <template x-if="plant.status === 'mati'" x-cloak x-transition>
+                                                <div class="w-100" x-transition x-cloak>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label class="block text-sm mb-1">Tanggal Mati</label>
+                                                            <input type="date" x-model="plant.tanggal_mati"
+                                                                :name="`plants[${plant.id}][tanggal_mati]`"
+                                                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800"
+                                                                required>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </template>
-
+                                            </template>
+                                        </div>
                                         {{-- LABELING --}}
                                         <template x-if="selectedStage === 'labeling'">
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
                                                     <label class="block text-sm mb-1">Konfirmasi Label</label>
-                                                    <select :name="`plants[${plant.id}][label_confirmed]`"
+                                                    <select :name="`plants[${plant.id}][label]`"
                                                         class="w-full border rounded-xl px-3 py-2">
                                                         <option value="">-- pilih --</option>
                                                         <option value="1">Sudah Ditempel</option>
@@ -667,7 +644,6 @@
                                                 </div>
                                             </div>
                                         </template>
-
                                         <input type="hidden" :name="`plants[${plant.id}][id]`" :value="plant.id">
                                     </div>
                                 </template>
@@ -703,9 +679,9 @@
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('inspeksiForm', () => ({
-                    selectedStage: 'checkup',
-                    currentStep: 1,
+                Alpine.data('inspeksiForm', (oldPlants = {}, oldStage = 'checkup') => ({
+                    selectedStage: oldStage, // ← pakai oldStage
+                    currentStep: oldPlants && Object.keys(oldPlants).length > 0 ? 2 : 1,
                     selectedPlants: [],
 
                     checkup: @json($checkupData),
@@ -713,10 +689,40 @@
                     aklimatisasi: @json($AklimatisasiData),
                     evaluasi: @json($evaluasiData),
                     criteriaList: @json($criteriaData),
+                    init() {
+                        if (!oldPlants || Object.keys(oldPlants).length === 0) return
 
+                        const stageData = this[oldStage] ?? []
+
+                        Object.entries(oldPlants).forEach(([plantId, plantData]) => {
+                            const plant = stageData.find(p => p.id == plantId)
+                            if (!plant) return
+
+                            const nilaiKriteria = {}
+                            this.criteriaList.forEach(k => {
+                                nilaiKriteria[k.id] = plantData?.kriteria?.[k.id]?.nilai ??
+                                    ''
+                            })
+
+                            this.selectedPlants.push({
+                                ...plant,
+                                status: plantData.status ?? '',
+                                label: plantData.label ?? '',
+                                tanggal_mati: plantData.tanggal_mati ?? '',
+                                nilai_kriteria: nilaiKriteria,
+                            })
+                        })
+
+                        this.$nextTick(() => this.syncIndeterminate())
+                    },
 
                     get currentStageData() {
                         return this[this.selectedStage] ?? []
+                    },
+
+                    togglePlantById(plantId) {
+                        const plant = this.currentStageData.find(p => p.id === plantId)
+                        if (plant) this.togglePlant(plant)
                     },
 
                     togglePlant(plant) {
@@ -724,14 +730,21 @@
                         if (exists) {
                             this.selectedPlants = this.selectedPlants.filter(p => p.id !== plant.id)
                         } else {
-
                             const nilaiKriteria = {}
                             this.criteriaList.forEach(k => {
-                                nilaiKriteria[k.id] = ''
+                                nilaiKriteria[k.id] = this.defaultCriteriaValue(k, plant)
                             })
+
                             this.selectedPlants.push({
                                 ...plant,
                                 status: '',
+                                label: '',
+                                tanggal_mati: '',
+                                nilai_kriteria: nilaiKriteria,
+                            })
+
+                            console.log('Tanaman dipilih untuk inspeksi', {
+                                plant,
                                 nilai_kriteria: nilaiKriteria,
                             })
                         }
@@ -746,11 +759,18 @@
 
                                     const nilaiKriteria = {}
                                     this.criteriaList.forEach(k => {
-                                        nilaiKriteria[k.id] = ''
+                                        nilaiKriteria[k.id] = this.defaultCriteriaValue(k, plant)
                                     })
                                     this.selectedPlants.push({
                                         ...plant,
                                         status: '',
+                                        label: '', // ← tambah
+                                        tanggal_mati: '', // ← tambah
+                                        nilai_kriteria: nilaiKriteria,
+                                    })
+
+                                    console.log('Tanaman dipilih untuk inspeksi', {
+                                        plant,
                                         nilai_kriteria: nilaiKriteria,
                                     })
                                 }
@@ -793,6 +813,51 @@
                         this.$nextTick(() => this.syncIndeterminate())
                     },
 
+                    defaultCriteriaValue(kriteria, plant) {
+                        if (kriteria.skala !== 'ordinal') return ''
+
+                        const name = (kriteria.nama_kriteria || '').toLowerCase()
+                        const label = name.includes('endemik') || name.includes('endemisitas')
+                            ? (plant.endemisitas || 'Tidak endemik')
+                            : (name.includes('status konservasi') || name.includes('endanger'))
+                                ? (plant.redlist_category || 'Melimpah')
+                                : null
+
+                        if (!label) return ''
+
+                        const ordinal = kriteria.ordinals.find(o => o.label === label)
+
+                        console.log('Autofill kriteria inspeksi', {
+                            tanaman_id: plant.id,
+                            nomor_akses: plant.nomor_akses,
+                            kriteria_id: kriteria.id,
+                            nama_kriteria: kriteria.nama_kriteria,
+                            endemisitas: plant.endemisitas,
+                            redlist_category: plant.redlist_category,
+                            label_dicari: label,
+                            ordinal_id: ordinal?.id ?? '',
+                            ordinal_options: kriteria.ordinals.map(o => ({
+                                id: o.id,
+                                label: o.label,
+                                nilai: o.nilai,
+                            })),
+                        })
+
+                        return ordinal ? String(ordinal.id) : ''
+                    },
+
+                    syncSelectValue(select, plant, kriteria) {
+                        const value = String(plant.nilai_kriteria[kriteria.id] ?? '')
+                        select.value = value
+
+                        console.log('Sinkron select autofill', {
+                            tanaman_id: plant.id,
+                            kriteria_id: kriteria.id,
+                            nama_kriteria: kriteria.nama_kriteria,
+                            value,
+                            selected_label: select.selectedOptions?.[0]?.textContent?.trim() ?? '',
+                        })
+                    },
                     nextStep() {
                         this.currentStep++
                     },

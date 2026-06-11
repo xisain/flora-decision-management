@@ -75,4 +75,4 @@ jobs:
       - name: Build frontend assets
         run: npm run build
       - name: Execute tests
-        run: php artisan test --debug
+        run: php artisan test
