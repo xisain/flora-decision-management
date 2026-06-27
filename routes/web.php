@@ -15,6 +15,7 @@ use App\Http\Controllers\peneliti\ranking\PelaporanPrometheeController;
 use App\Http\Controllers\peneliti\ranking\RankingTanamanController;
 use App\Http\Middleware\adminMiddleware;
 use App\Http\Middleware\penelitiMiddleware;
+use App\Http\Middleware\registeredAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
         return response()->json(['success' => true]);
     })->name('sidebar.toggle');
-    Route::prefix('admin')->middleware([adminMiddleware::class, 'auth'])->group(function () {
+    Route::prefix('admin')->middleware([adminMiddleware::class,registeredAccount::class, 'auth', ])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
         Route::prefix('management')->group(function () {
             Route::resource('user', UserController::class);
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
         });
 
     });
-    Route::prefix('peneliti')->middleware([penelitiMiddleware::class])->group(function () {
+    Route::prefix('peneliti')->middleware([penelitiMiddleware::class,registeredAccount::class, 'auth'])->group(function () {
         Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
         Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
         Route::resource('penyemaian', penyemaianTanamanController::class)->names('peneliti.penyemaian');
