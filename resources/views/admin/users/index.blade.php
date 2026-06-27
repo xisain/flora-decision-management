@@ -16,7 +16,6 @@
             </div>
         </div>
     @endif
-
     {{-- Success Alert --}}
     @if (session('success'))
         <div class="mb-4 flex gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm">
@@ -184,26 +183,38 @@
                                 {{-- Actions --}}
                                 <td class="px-5 py-4 text-center">
                                     <div class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                                        {{-- <a href="{{ route('user.show', $user->id) }}" title="Detail"
-                                            class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)] hover:bg-[var(--flora-teal)]/10 transition-colors">
-                                            <i class="fa-solid fa-eye text-xs"></i>
-                                        </a> --}}
                                         <a href="{{ route('user.edit', $user->id) }}" title="Edit"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
                                             <i class="fa-solid fa-pen text-xs"></i>
                                         </a>
-                                        <form method="POST" action="{{ route('user.destroy', $user) }}"
-                                            class="form-delete" data-user="{{ $user->name }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="delete_collector" value="0"
-                                                class="delete-collector-input">
-                                            <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                            <button type="submit"
-                                                class="btn-delete p-1.5 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
-                                                <i class="fa-solid fa-trash text-xs"></i>
-                                            </button>
-                                        </form>
+
+                                        @php
+                                            $isSelf = $user->id == auth()->id();
+                                            $isAdmin = $user->roles_id != 3;
+                                            $onlyOneAdmin = $admin == 1;
+                                            $canDelete = !$isSelf && !($isAdmin && $onlyOneAdmin);
+                                        @endphp
+
+                                        @if($canDelete)
+                                            <form method="POST" action="{{ route('user.destroy', $user) }}" class="form-delete"
+                                                data-user="{{ $user->name }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="delete_collector" value="0" class="delete-collector-input">
+                                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                <button type="submit"
+                                                    class="btn-delete p-1.5 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                                    <i class="fa-solid fa-trash text-xs"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                           
+                                            <span class="p-1.5 text-gray-300 cursor-not-allowed"
+                                                title="{{ $isSelf ? 'Tidak bisa menghapus akun sendiri' : 'Admin terakhir tidak bisa dihapus' }}">
+                                                <i class="fa-solid fa-lock text-xs"></i>
+                                            </span>
+                                        @endif
+
                                     </div>
                                 </td>
                             </tr>

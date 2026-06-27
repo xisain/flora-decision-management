@@ -24,8 +24,8 @@ class UserController extends Controller
     {
         $users = $this->userRepository->getFilteredUsers($request);
         $roles = Role::all();
-
-        return view('admin.users.index', compact('users', 'roles'));
+        $admin = User::where('roles_id','=',1)->count();
+        return view('admin.users.index', compact('users', 'roles','admin'));
     }
     public function create()
     {
@@ -59,8 +59,32 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         $user = User::findOrFail($request->user_id);
-        $collector_data = CollectorInfo::where('user_id',$user->id)->get();
-        dd($collector_data);
+
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Tidak bisa menghapus akun sendiri.');
+        }
+
+
+        $isAdmin = $user->roles_id != 3;
+        $onlyOneAdmin = User::where('roles_id', '!=', 3)->count() === 1;
+
+        if ($isAdmin && $onlyOneAdmin) {
+            return back()->with('error', 'Admin terakhir tidak bisa dihapus.');
+        }
+
+
+        $collector_data = CollectorInfo::where('user_id', $user->id)->get();
+        if ($collector_data->isNotEmpty()) {
+            if ($request->delete_collector == 1) {
+                CollectorInfo::where('user_id', $user->id)->delete();
+            } else {
+                CollectorInfo::where('user_id', $user->id)->update(['user_id' => null]);
+            }
+        }
+
+        $user->delete();
+
+        return back()->with('success', 'User ' . $user->name . ' berhasil dihapus.');
     }
 
 }

@@ -195,14 +195,21 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                         <!-- Tanggal Penerimaan -->
-                        <div>
+                         <div>
                             <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">
                                 Tanggal Penerimaan <span class="text-red-400">*</span>
                             </label>
                             <input type="date" name="tanggal_penerimaan"
-                                class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm
-                       focus:ring-2 focus:ring-[var(--flora-teal)]/30
-                       focus:border-[var(--flora-teal)] bg-white">
+                                x-model="tanggal_penerimaan"
+                                :max="today"
+                                @change="validateTanggal()"
+                                class="w-full border rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--flora-teal)]/30 focus:border-[var(--flora-teal)] bg-white transition-colors"
+                                :class="tanggalErrors.penerimaan ? 'border-red-400' : 'border-gray-200'">
+                            <p x-show="tanggalErrors.penerimaan"
+                                class="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span x-text="tanggalErrors.penerimaan"></span>
+                            </p>
                         </div>
 
                         <!-- Tanggal Explorasi -->
@@ -211,9 +218,16 @@
                                 Tanggal Explorasi <span class="text-red-400">*</span>
                             </label>
                             <input type="date" name="tanggal_explorasi"
-                                class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm
-                       focus:ring-2 focus:ring-[var(--flora-teal)]/30
-                       focus:border-[var(--flora-teal)] bg-white">
+                                x-model="tanggal_explorasi"
+                                :max="tanggal_penerimaan || yesterday"
+                                @change="validateTanggal()"
+                                class="w-full border rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--flora-teal)]/30 focus:border-[var(--flora-teal)] bg-white transition-colors"
+                                :class="tanggalErrors.explorasi ? 'border-red-400' : 'border-gray-200'">
+                            <p x-show="tanggalErrors.explorasi"
+                                class="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span x-text="tanggalErrors.explorasi"></span>
+                            </p>
                         </div>
 
                         <!-- Jenis Form -->
@@ -886,6 +900,12 @@
                     gunakanTimLama: true,
                     selectedTimId: '',
                     modeInput: 'manual',
+                    tanggal_penerimaan: '',
+                    tanggal_explorasi: '',
+                    tanggalErrors: {
+                        penerimaan: '',
+                        explorasi: ''
+                    },
                     // Step 1 Function :
                     // getter untuk dokumen di Step 1
                     get dokumenTerlampir() {
@@ -944,6 +964,31 @@
                         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
                     },
                     // End Of Function Step 1
+                    // Function step 2
+                    get today() {
+                        return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+                    },
+                    get yesterday() {
+                        const d = new Date();
+                        d.setDate(d.getDate() - 1);
+                        return d.toISOString().split('T')[0];
+                    },
+                    validateTanggal() {
+                        this.tanggalErrors.penerimaan = '';
+                        this.tanggalErrors.explorasi = '';
+
+                        if (this.tanggal_penerimaan && this.tanggal_penerimaan > this.today) {
+                            this.tanggalErrors.penerimaan = 'Tanggal penerimaan tidak boleh lebih dari hari ini.';
+                        }
+
+                        if (this.tanggal_explorasi && this.tanggal_penerimaan) {
+                            if (this.tanggal_explorasi >= this.tanggal_penerimaan) {
+                                this.tanggalErrors.explorasi = 'Tanggal eksplorasi tidak boleh lebih dari tanggal penerimaan.';
+                            }
+                        }
+
+                        return !this.tanggalErrors.penerimaan && !this.tanggalErrors.explorasi;
+                    },
                     // Function Of Step 3
                     timBaru: {
                         namaTim: '',
@@ -1076,6 +1121,7 @@
                     // Nav Function
                     nextStep() {
                         if (this.step === 1 && !this.semuaDokumenValid) return;
+                        if (this.step === 2 && !this.validateTanggal()) return;
                         if (this.step < this.steps.length) this.step++;
                         if (this.step === 4 && this.modeInput === 'manual' && this.tanamanList.length ===
                             0) {

@@ -7,6 +7,21 @@
 @section('page_subtitle', 'Enter your credentials to continue.')
 
 @section('content')
+@if ($errors->any())
+        <div class="mb-4 flex gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm">
+            <div class="shrink-0 pt-0.5">
+                <i class="fa-solid fa-circle-exclamation text-red-500 text-base"></i>
+            </div>
+            <div>
+                <p class="font-semibold text-red-700 mb-1">Terdapat {{ $errors->count() }} Kesalahan</p>
+                <ul class="list-disc list-inside space-y-0.5 text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
     <form class="flex flex-col gap-5" method="POST" action="{{ route('login') }}">
         @csrf
 

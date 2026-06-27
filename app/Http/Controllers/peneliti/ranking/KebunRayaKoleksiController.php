@@ -28,8 +28,8 @@ class KebunRayaKoleksiController extends Controller
     }
 
     /**
-     * Store selected plants as botanical garden collection.
-     * Also saves PROMETHEE II flow data to pelaporan_promethee table.
+     *
+     *
      */
     public function store(Request $request): RedirectResponse
     {
@@ -115,10 +115,10 @@ class KebunRayaKoleksiController extends Controller
         $callback = function () use ($koleksi) {
             $handle = fopen('php://output', 'w');
 
-            // UTF-8 BOM for Excel compatibility
+
             fwrite($handle, "\xEF\xBB\xBF");
 
-            // Header row
+
             fputcsv($handle, [
                 'Nomor Akses',
                 'Nama Ilmiah',
