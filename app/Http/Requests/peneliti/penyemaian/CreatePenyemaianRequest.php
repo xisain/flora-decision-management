@@ -23,7 +23,7 @@ class CreatePenyemaianRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tanggal_penyemaian' => ['required', 'date'],
+            'tanggal_penyemaian' => ['required', 'date', 'before_or_equal:today'],
             'lokasi_semai' => ['required', 'string', 'max:255'],
             'catatan' => ['nullable', 'string', 'max:255'],
             'tanaman' => ['required', 'array', 'min:1'],

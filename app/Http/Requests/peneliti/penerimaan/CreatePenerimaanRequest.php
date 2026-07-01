@@ -27,8 +27,8 @@ class CreatePenerimaanRequest extends FormRequest
             'dokumen.*.nomorSurat' => ['nullable', 'string', 'max:255'],
             'dokumen.*.fileSurat' => ['required', 'file', 'mimes:pdf', 'max:5120'],
             // Step 2 Validate
-            'tanggal_penerimaan' => ['required', 'date'],
-            'tanggal_explorasi' => ['required', 'date'],
+            'tanggal_penerimaan' => ['required', 'date', 'before_or_equal:today'],
+            'tanggal_explorasi' => ['required', 'date','before:tanggal_penerimaan'],
             'jenis_form' => ['required', 'string'],
             'tempat_asal' => ['required', 'string', 'max:255'],
             'country' => ['required', 'string', 'max:255'],

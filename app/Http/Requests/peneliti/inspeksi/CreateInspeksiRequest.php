@@ -23,7 +23,7 @@ class CreateInspeksiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tanggal_inspeksi' => ['required', 'date'],
+            'tanggal_inspeksi' => ['required', 'date','before_or_equal:today'],
             'catatan' => ['required', 'string'],
             'stage' => ['required', 'string'],
             'plants.*' => ['required', 'array', 'min:1'],
