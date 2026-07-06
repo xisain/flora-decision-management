@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class penelitiMiddleware
+class pembibitanMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,8 @@ class penelitiMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->roles->name === 'peneliti') {
+        if ($request->user()->roles->id === 3) {
+ //           dd($request->user()->roles);
             return $next($request);
         } else {
             abort(403, 'Tidak Memiliki Akses');
