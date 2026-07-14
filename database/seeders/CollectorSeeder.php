@@ -62,7 +62,7 @@ class CollectorSeeder extends Seeder
                 'email'          => 'budi.santoso@collector.id',
                 'phone_number'   => '082233445566',
                 'account_status' => 1,
-                'roles_id'       => 3,
+                'roles_id'       => 1,
                 'password'       => Hash::make('password123'),
             ],
             [

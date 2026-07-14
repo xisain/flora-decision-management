@@ -23,7 +23,7 @@ class PenelitiInspeksiTest extends TestCase
     {
         parent::setUp();
 
-        $rolePeneliti = Role::factory()->create(['name' => 'peneliti']);
+        $rolePeneliti = Role::factory()->create(['name' => 'teknisi pembibitan']);
         $this->peneliti = User::factory()->create(['roles_id' => $rolePeneliti->id]);
     }
 

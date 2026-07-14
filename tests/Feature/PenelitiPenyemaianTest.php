@@ -15,19 +15,19 @@ class PenelitiPenyemaianTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $peneliti;
+    protected $pembibitan;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $rolePeneliti = Role::factory()->create(['name' => 'peneliti']);
-        $this->peneliti = User::factory()->create(['roles_id' => $rolePeneliti->id]);
+        $rolePeneliti = Role::factory()->create(['id'=> 3,'name' => 'teknisi pembibitan']);
+        $this->pembibitan = User::factory()->create(['roles_id' => $rolePeneliti->id]);
     }
 
     public function test_peneliti_bisa_membuka_halaman_penyemaian()
     {
-        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penyemaian.index'));
+        $response = $this->actingAs($this->pembibitan)->get(route('peneliti.penyemaian.index'));
 
         $response->assertStatus(200);
         $response->assertViewHas('data');
@@ -48,7 +48,7 @@ class PenelitiPenyemaianTest extends TestCase
             ]
         ];
 
-        $response = $this->actingAs($this->peneliti)->post(route('peneliti.penyemaian.store'), $data);
+        $response = $this->actingAs($this->pembibitan)->post(route('peneliti.penyemaian.store'), $data);
 
         $response->assertRedirect(route('peneliti.penyemaian.index'));
         $this->assertDatabaseHas('penyemaian', [
@@ -59,7 +59,7 @@ class PenelitiPenyemaianTest extends TestCase
     }
     public function test_peneliti_bisa_melihat_detail_penyemaian_tanaman(){
         $semai = PenyemaianTanaman::factory()->create();
-        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penyemaian.show',$semai->id));
+        $response = $this->actingAs($this->pembibitan)->get(route('peneliti.penyemaian.show',$semai->id));
         $response->assertStatus(200);
         $response->assertViewHasAll(['data', 'groupedTanaman', 'groupedTanamanPaginated']);
     }
@@ -69,7 +69,7 @@ class PenelitiPenyemaianTest extends TestCase
         $tanamanPending = Tanaman::factory()->create();
         $tanamanSemai = Tanaman::factory()->create();
 
-        $response = $this->actingAs($this->peneliti)->get(route('peneliti.penyemaian.create'));
+        $response = $this->actingAs($this->pembibitan)->get(route('peneliti.penyemaian.create'));
 
         $response->assertStatus(200);
         $createData = $response->viewData('create');
@@ -99,7 +99,7 @@ class PenelitiPenyemaianTest extends TestCase
             ]
         ];
 
-        $response = $this->actingAs($this->peneliti)->post(route('peneliti.penyemaian.store'), $data);
+        $response = $this->actingAs($this->pembibitan)->post(route('peneliti.penyemaian.store'), $data);
         $response->assertRedirect(route('peneliti.penyemaian.index'));
 
         $this->assertDatabaseHas('penyemaian_tanaman', [

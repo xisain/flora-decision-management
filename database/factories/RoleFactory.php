@@ -12,7 +12,7 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(['admin', 'peneliti']),
+            'name' => fake()->randomElement(['admin', 'teknisi registrasi', 'teknisi pembibitan']),
             'description' => fake()->sentence(),
         ];
     }
@@ -28,8 +28,24 @@ class RoleFactory extends Factory
     public function peneliti(): static
     {
         return $this->state(fn () => [
-            'name' => 'peneliti',
-            'description' => 'Peneliti',
+            'name' => 'teknisi registrasi',
+            'description' => 'teknisi registrasi',
+        ]);
+    }
+
+    public function teknisiRegistrasi(): static
+    {
+        return $this->state(fn () => [
+            'name' => 'teknisi registrasi',
+            'description' => 'Teknisi Registrasi',
+        ]);
+    }
+
+    public function teknisiPembibitan(): static
+    {
+        return $this->state(fn () => [
+            'name' => 'teknisi pembibitan',
+            'description' => 'Teknisi Pembibitan',
         ]);
     }
 }
