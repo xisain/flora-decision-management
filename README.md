@@ -1,58 +1,195 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Flora Decision Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Flora Decision Management (FDM) adalah aplikasi berbasis web yang dikembangkan untuk membantu pengelolaan koleksi tanaman di Kebun Raya Bundayati Bulungan. Selain mendukung proses administrasi koleksi tanaman, aplikasi ini juga mengimplementasikan Sistem Pendukung Keputusan (SPK) menggunakan metode **PROMETHEE II (Preference Ranking Organization Method for Enrichment Evaluation II)** untuk menghasilkan rekomendasi prioritas tanaman konservasi berdasarkan kriteria yang telah ditentukan oleh ahli.
 
-## About Laravel
+## Latar Belakang
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Pengelolaan koleksi tanaman konservasi memerlukan proses pencatatan yang terstruktur serta pengambilan keputusan yang terukur. Proses penentuan prioritas tanaman yang masih dilakukan secara manual berpotensi menimbulkan inkonsistensi dan membutuhkan waktu yang cukup lama.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Flora Decision Management dikembangkan untuk membantu proses tersebut dengan menyediakan sistem informasi yang mampu mengelola data koleksi tanaman sekaligus menghasilkan rekomendasi prioritas konservasi menggunakan metode PROMETHEE II.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur
 
-## Learning Laravel
+Sistem memiliki beberapa modul utama, yaitu:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Dashboard
+- Manajemen pengguna
+- Manajemen role dan hak akses
+- Manajemen data tanaman
+- Manajemen data spesies
+- Manajemen data genus
+- Manajemen data famili
+- Manajemen lokasi
+- Manajemen kriteria
+- Penerimaan tanaman
+- Penyemaian tanaman
+- Inspeksi tanaman
+- Sistem pendukung keputusan menggunakan metode PROMETHEE II
+- Laporan hasil rekomendasi tanaman
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tahapan Inspeksi
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Tahapan inspeksi tanaman pada sistem terdiri dari:
 
-## Agentic Development
+- Checkup
+- Labeling
+- Aklimatisasi
+- Evaluasi
+- Siap Tanam
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Metode SPK
 
-```bash
-composer require laravel/boost --dev
+Metode yang digunakan pada sistem adalah PROMETHEE II dengan tahapan sebagai berikut.
 
-php artisan boost:install
+1. Menentukan alternatif tanaman.
+2. Menentukan kriteria penilaian.
+3. Menentukan bobot setiap kriteria.
+4. Menghitung nilai preferensi antar alternatif.
+5. Menghitung Leaving Flow.
+6. Menghitung Entering Flow.
+7. Menghitung Net Flow.
+8. Menghasilkan peringkat tanaman berdasarkan nilai Net Flow.
+
+## Teknologi yang Digunakan
+
+### Backend
+
+- Laravel 13
+- PHP 8.3
+
+### Frontend
+
+- Blade
+- Tailwind CSS
+- Alpine.js
+
+### Database
+
+- MySQL
+
+### Build Tools
+
+- Vite
+- Composer
+- npm
+
+## Struktur Direktori
+
+```
+app/
+├── Http/
+├── Models/
+├── Services/
+├── Repositories/
+└── Policies/
+
+database/
+├── migrations/
+├── seeders/
+└── factories/
+
+resources/
+├── css/
+├── js/
+└── views/
+
+routes/
+├── web.php
+└── auth.php
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Instalasi
 
-## Contributing
+### 1. Clone Repository
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone https://github.com/xisain/flora-decision-management.git
 
-## Code of Conduct
+cd flora-decision-management
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Install Dependency
 
-## Security Vulnerabilities
+```bash
+composer install
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+npm install
+```
 
-## License
+### 3. Konfigurasi Environment
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+cp .env.example .env
+
+php artisan key:generate
+```
+
+Sesuaikan konfigurasi database pada file `.env`.
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=flora_decision_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Migrasi Database
+
+```bash
+php artisan migrate --seed
+```
+
+### 5. Membuat Symbolic Link Storage
+
+```bash
+php artisan storage:link
+```
+
+### 6. Menjalankan Aplikasi
+
+Menjalankan server Laravel.
+
+```bash
+php artisan serve
+```
+
+Menjalankan Vite.
+
+```bash
+npm run dev
+```
+
+## Peran Pengguna
+
+Sistem memiliki tiga jenis pengguna.
+
+| Role | Deskripsi |
+|-------|-----------|
+| Administrator | Mengelola data master, pengguna, role, kriteria, dan konfigurasi sistem. |
+| Teknisi Registrasi | Mengelola proses penerimaan tanaman beserta data pendukungnya. |
+| Teknisi Pembibitan | Mengelola penyemaian, inspeksi tanaman, serta proses rekomendasi tanaman. |
+
+
+
+## Pengembangan Selanjutnya
+
+Beberapa pengembangan yang dapat dilakukan pada sistem antara lain:
+
+- Pengembangan aplikasi mobile menggunakan Flutter.
+- Integrasi pemindaian barcode atau QR Code.
+- Penyediaan REST API.
+- Integrasi dengan Sistem Informasi Geografis (SIG).
+- Penambahan fitur pelaporan dan analisis data.
+- Penambahan sistem notifikasi.
+
+## Penelitian
+
+Aplikasi ini dikembangkan sebagai implementasi penelitian dengan judul:
+
+**Sistem Pendukung Keputusan Tanaman Konservasi di Kebun Raya Bundayati Bulungan Berbasis Web dengan Metode PROMETHEE II**
+
+## Lisensi
+
+Repositori ini menggunakan lisensi MIT. Silakan sesuaikan apabila menggunakan lisensi lain.
