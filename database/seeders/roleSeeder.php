@@ -18,11 +18,11 @@ class roleSeeder extends Seeder
             'description' => 'Admin Untuk Edit Berita, dan Pengaturan Bobot dan kriteria'
         ]);
         Role::create([
-            'name' => 'Teknisi Registrasi',
+            'name' => 'teknisi registrasi',
             'description' => 'Admin untuk melakukan Penyemaian'
         ]);
         Role::create([
-            'name' => 'Teknisi Pembibitan',
+            'name' => 'teknisi pembibitan',
             'description' => 'User yang melakukan Explorasi dan Isi Data Penerimaan'
         ]);
     }
