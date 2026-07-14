@@ -35,8 +35,12 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.home'));
         }
 
-        if ((int) $user->roles_id === 3 ||  (int) $user->roles_id === 2) {
-            return redirect()->intended(route('peneliti.home'));
+        if ((int) $user->roles_id === 2) {
+            return redirect()->intended(route('peneliti.registrasi.home'));
+        }
+
+        if ((int ) $user->roles_id === 3){
+            return redirect()->intended(route('peneliti.pembibitan.home'));
         }
 
         Auth::logout();

@@ -15,7 +15,7 @@ class RegistrasiMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->roles->id === 2) {
+        if ($request->user()->roles->name === 'teknisi registrasi') {
             //dd($request->user()->roles);
             return $next($request);
         } else {

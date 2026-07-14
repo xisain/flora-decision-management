@@ -15,7 +15,7 @@ class pembibitanMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->roles->id === 3) {
+        if ($request->user()->roles->name === 'teknisi pembibitan') {
  //           dd($request->user()->roles);
             return $next($request);
         } else {

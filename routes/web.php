@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
     });
     Route::prefix('registrasi')->middleware([RegistrasiMiddleware::class,registeredAccount::class, 'auth'])->group(function () {
-        Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
+        Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.registrasi.home');
         Route::resource('penerimaan', penerimaanTanamanController::class)->names('peneliti.penerimaan');
 
         // Ranking & Koleksi Kebun Raya
@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{inspeksi_tanaman_id}', [RankingTanamanController::class, 'findbyInspeksiTanamanId']);
     });
     Route::prefix('pembibitan')->middleware([pembibitanMiddleware::class,registeredAccount::class, 'auth'])->group(function(){
-        Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.home');
+        Route::get('/', [PenelitiDashboardController::class, 'index'])->name('peneliti.pembibitan.home');
         Route::resource('penyemaian', penyemaianTanamanController::class)->names('peneliti.penyemaian');
 
         Route::get('inspeksi/editEvaluasi/{id}', [inspeksiTanamanController::class, 'editEvaluasi'])->name('peneliti.inspeksi.editEvaluasi');

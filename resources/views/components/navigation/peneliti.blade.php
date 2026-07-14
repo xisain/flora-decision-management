@@ -13,119 +13,113 @@
 
         {{-- Navigation --}}
         <nav class="px-4 py-2 space-y-2">
-            <a href="{{ route('peneliti.home') }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.home') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+            <a href="{{ Route::has('peneliti.registrasi.home') ? route('peneliti.registrasi.home') : '#' }}"
+                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.registrasi.home') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
                 :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-house" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Dashboard
-                </span>
-            </a>
 
-            {{-- Penerimaan --}}
-            <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Penerimaan
-                </span>
-            </a>
+                {{-- Penerimaan --}}
+                <a href="{{ Route::has('peneliti.penerimaan.index') ? route('peneliti.penerimaan.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penerimaan.*') ? 'bg-[var(--flora-teal)] text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-clipboard" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Penerimaan
+                    </span>
+                </a>
 
-            {{-- Penyemaian --}}
-            <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Penyemaian
-                </span>
-            </a>
+                {{-- Penyemaian --}}
+                <a href="{{ Route::has('peneliti.penyemaian.index') ? route('peneliti.penyemaian.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.penyemaian.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-seedling" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Penyemaian
+                    </span>
+                </a>
 
-            <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Inspeksi
-                </span>
-            </a>
+                <a href="{{ Route::has('peneliti.inspeksi.index') ? route('peneliti.inspeksi.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.inspeksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-magnifying-glass" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Inspeksi
+                    </span>
+                </a>
 
-            {{-- Ranking --}}
-            <a href="{{ Route::has('peneliti.ranking.index') ? route('peneliti.ranking.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.ranking.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-chart-bar" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Perankingan
-                </span>
-            </a>
+                {{-- Ranking --}}
+                <a href="{{ Route::has('peneliti.ranking.index') ? route('peneliti.ranking.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.ranking.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-chart-bar" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Perankingan
+                    </span>
+                </a>
 
-            {{-- Koleksi Kebun Raya --}}
-            <a href="{{ Route::has('peneliti.koleksi.index') ? route('peneliti.koleksi.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.koleksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-leaf" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Koleksi Kebun Raya
-                </span>
-            </a>
+                {{-- Koleksi Kebun Raya --}}
+                <a href="{{ Route::has('peneliti.koleksi.index') ? route('peneliti.koleksi.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.koleksi.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-leaf" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Koleksi Kebun Raya
+                    </span>
+                </a>
 
-            {{-- Pelaporan PROMETHEE II --}}
-            <a href="{{ Route::has('peneliti.pelaporan.index') ? route('peneliti.pelaporan.index') : '#' }}"
-                class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.pelaporan.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
-                :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
-                <i class="fa-solid fa-chart-column" :class="{ 'text-lg': !sidebarOpen }"></i>
-                <span class="ml-3 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    Pelaporan
-                </span>
-            </a>
+                {{-- Pelaporan PROMETHEE II --}}
+                <a href="{{ Route::has('peneliti.pelaporan.index') ? route('peneliti.pelaporan.index') : '#' }}"
+                    class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('peneliti.pelaporan.*') ? 'bg-(--flora-teal) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+                    :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+                    <i class="fa-solid fa-chart-column" :class="{ 'text-lg': !sidebarOpen }"></i>
+                    <span class="ml-3 transition-opacity duration-200"
+                        :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                        Pelaporan
+                    </span>
+                </a>
         </nav>
 
     </div>
 
     {{-- User Profile & Logout --}}
     @auth
-        <div class="border-t border-gray-100 p-4">
-            <div class="flex items-center gap-3" :class="{ 'justify-center': !sidebarOpen }">
-                {{-- Avatar --}}
-                <div
-                    class="w-9 h-9 rounded-full bg-[var(--flora-teal-pale)] border-2 border-[var(--flora-teal-light)] flex items-center justify-center flex-shrink-0 text-[var(--flora-teal)] font-semibold text-sm">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                </div>
-
-                {{-- Name & role --}}
-                <div class="flex-1 min-w-0 transition-opacity duration-200"
-                    :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
-                    <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
-                    <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
-                </div>
-
-                {{-- Logout --}}
-                <form method="POST" action="{{ route('logout') }}" :class="{ 'hidden': !sidebarOpen }">
-                    @csrf
-                    <button type="submit" title="Logout"
-                        class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-50">
-                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
-                    </button>
-                </form>
+    <div class="border-t border-gray-100 p-4">
+        <div class="flex items-center gap-3" :class="{ 'justify-center': !sidebarOpen }">
+            {{-- Avatar --}}
+            <div
+                class="w-9 h-9 rounded-full bg-[var(--flora-teal-pale)] border-2 border-[var(--flora-teal-light)] flex items-center justify-center flex-shrink-0 text-[var(--flora-teal)] font-semibold text-sm">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
 
-            {{-- Collapsed logout --}}
-            <form method="POST" action="{{ route('logout') }}" class="mt-2" :class="{ 'hidden': sidebarOpen }">
+            {{-- Name & role --}}
+            <div class="flex-1 min-w-0 transition-opacity duration-200"
+                :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
+                <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
+            </div>
+
+            {{-- Logout --}}
+            <form method="POST" action="{{ route('logout') }}" :class="{ 'hidden': !sidebarOpen }">
                 @csrf
                 <button type="submit" title="Logout"
-                    class="w-full flex justify-center text-gray-400 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                    class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-50">
                     <i class="fa-solid fa-right-from-bracket text-sm"></i>
                 </button>
             </form>
         </div>
+
+        {{-- Collapsed logout --}}
+        <form method="POST" action="{{ route('logout') }}" class="mt-2" :class="{ 'hidden': sidebarOpen }">
+            @csrf
+            <button type="submit" title="Logout"
+                class="w-full flex justify-center text-gray-400 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                <i class="fa-solid fa-right-from-bracket text-sm"></i>
+            </button>
+        </form>
+    </div>
     @endauth
 </aside>

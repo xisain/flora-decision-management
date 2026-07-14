@@ -16,7 +16,7 @@ class AuthAuthorizationTest extends TestCase
         parent::setUp();
 
         Role::factory()->create(['name' => 'admin']);
-        Role::factory()->create(['name' => 'peneliti']);
+        Role::factory()->create(['name' => 'teknisi registrasi']);
     }
 
     public function test_guest_tidak_bisa_akses_admin_dashboard()
@@ -27,7 +27,7 @@ class AuthAuthorizationTest extends TestCase
 
     public function test_guest_tidak_bisa_akses_peneliti_dashboard()
     {
-        $response = $this->get(route('peneliti.home'));
+        $response = $this->get(route('peneliti.registrasi.home'));
         $response->assertRedirect('/login');
     }
 
@@ -52,11 +52,30 @@ class AuthAuthorizationTest extends TestCase
         ]);
     }
 
-    public function test_peneliti_bisa_akses_peneliti_dashboard()
+    public function test_peneliti_registrasi_bisa_akses_peneliti_dashboard()
     {
-        $peneliti = User::factory()->peneliti()->create();
+        $peneliti = User::factory()->teknisiRegistrasi()->create();
 
-        $response = $this->actingAs($peneliti)->get(route('peneliti.home'));
+        $response = $this->actingAs($peneliti)->get(route('peneliti.registrasi.home'));
+        $response->assertStatus(200);
+        $response->assertViewHasAll([
+            'dataPenerimaaanCount',
+            'dataPenerimaanTanamanCount',
+            'tanamanCount',
+            'penyemaianTanamanCount',
+            'checkupCount',
+            'labelingCount',
+            'aklimatisasiCount',
+            'evaluasiCount']);
+    }
+    public function test_peneliti_pembibitan_bisa_akses_peneliti_registrasi_dashboard(){
+        $peneliti = User::factory()->teknisiPembibitan()->create();
+        $response = $this->actingAs($peneliti)->get(route('peneliti.registrasi.home'));
+        $response->assertStatus(403);
+    }
+    public function test_peneliti_pembibitan_bisa_akses_peneliti_pembibitan_dashboard(){
+        $peneliti = User::factory()->teknisiPembibitan()->create();
+        $response = $this->actingAs($peneliti)->get(route('peneliti.pembibitan.home'));
         $response->assertStatus(200);
         $response->assertViewHasAll([
             'dataPenerimaaanCount',
@@ -71,7 +90,7 @@ class AuthAuthorizationTest extends TestCase
 
     public function test_peneliti_tidak_bisa_akses_halaman_admin()
     {
-        $peneliti = User::factory()->peneliti()->create();
+        $peneliti = User::factory()->teknisiRegistrasi()->create();
 
         $response = $this->actingAs($peneliti)->get(route('admin.home'));
         $response->assertStatus(403);
@@ -81,7 +100,7 @@ class AuthAuthorizationTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $response = $this->actingAs($admin)->get(route('peneliti.home'));
+        $response = $this->actingAs($admin)->get(route('peneliti.registrasi.home'));
         $response->assertStatus(403);
     }
 }

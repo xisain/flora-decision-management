@@ -54,10 +54,18 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function peneliti(): static
+
+    public function teknisiRegistrasi(): static
     {
         return $this->state(fn () => [
-            'roles_id' => Role::factory()->peneliti(),
+            'roles_id' => Role::factory()->teknisiRegistrasi(),
+        ]);
+    }
+
+    public function teknisiPembibitan(): static
+    {
+        return $this->state(fn () => [
+            'roles_id' => Role::factory()->teknisiPembibitan(),
         ]);
     }
 

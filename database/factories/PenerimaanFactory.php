@@ -20,7 +20,7 @@ class PenerimaanFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->peneliti(),
+            'user_id' => User::factory()->teknisiRegistrasi(),
             'tanggal_explorasi'=> fake()->date(),
             'jenis_form' =>fake()->randomElement(['explorasi','penerimaan']),
             'tanggal_penerimaan' => fake()->date(),
