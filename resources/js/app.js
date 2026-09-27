@@ -8,3 +8,7 @@ window.ApexCharts = ApexCharts
 // window.XLSX = XLSX
 import Swal from 'sweetalert2';
 window.Swal = Swal;
+import Choices from 'choices.js';
+window.Choices = Choices;
+import Trix from 'trix';
+window.Trix = Trix;

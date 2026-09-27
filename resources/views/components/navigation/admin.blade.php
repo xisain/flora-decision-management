@@ -101,6 +101,15 @@
                     Kriteria & Bobot
                 </span>
             </a>
+            <a href="{{ route('admin.berita.index') }}"
+               class="flex items-center px-3 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.berita.*') ? 'bg-(--flora-teal) text-white font-semibold': 'text-gray-900 hover:bg-gray-100' }}"
+               :class="{ 'justify-center': !sidebarOpen, 'justify-start': sidebarOpen }">
+               <i class="fa-solid fa-newspaper" :class="{ 'text-lg': !sidebarOpen }"></i>
+               <span class="ml-3 transition-opacity duration-200"
+                   :class="{ 'opacity-0 hidden': !sidebarOpen, 'opacity-100': sidebarOpen }">
+                   Berita
+               </span>
+           </a>
         </nav>
     </div>
 
