@@ -1,7 +1,8 @@
 <aside
     class="fixed inset-y-0 left-0 bg-white text-white z-40 sidebar-transition transition-all duration-300 ease-in-out flex flex-col justify-between rounded-r-2xl shadow-xl border border-r-gray-200"
-    :class="sidebarOpen ? 'w-64' : 'w-20'">
+    :class="{ 'w-64': sidebarOpen, 'w-20': !sidebarOpen, 'max-lg:hidden': !sidebarOpen }">
     <div>
+        <button type="button" @click="sidebarOpen = false" class="lg:hidden min-h-11 px-4 text-gray-700 focus-visible:outline-2 focus-visible:outline-(--flora-moss)">Tutup navigasi</button>
         {{-- Logo --}}
         <div class="flex flex-col items-center py-4">
             <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="w-12 h-12" />
@@ -110,6 +111,12 @@
                    Berita
                </span>
            </a>
+            <a href="{{ route('admin.tempat-menarik.index') }}" aria-label="Tempat menarik"
+               class="flex min-h-11 items-center px-3 py-2 rounded-xl transition-colors {{ request()->routeIs('admin.tempat-menarik.*') ? 'bg-(--flora-moss) text-white font-semibold' : 'text-gray-900 hover:bg-gray-100' }}"
+               :class="{ 'justify-center': !sidebarOpen }">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                <span class="ml-3" :class="{ 'hidden': !sidebarOpen }">Tempat menarik</span>
+            </a>
         </nav>
     </div>
 

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html class="" x-data="{
-          sidebarOpen: localStorage.getItem('sidebar_open') !== null ? localStorage.getItem('sidebar_open') === 'true' : true,
+          sidebarOpen: window.innerWidth >= 1024 && (localStorage.getItem('sidebar_open') !== null ? localStorage.getItem('sidebar_open') === 'true' : true),
           userOpen: false,
 
           toggleSidebar() {
               this.sidebarOpen = !this.sidebarOpen;
-              localStorage.setItem('sidebar_open', this.sidebarOpen);
+              if (window.innerWidth >= 1024) localStorage.setItem('sidebar_open', this.sidebarOpen);
 
               // Sync ke server
               fetch('{{ route('sidebar.toggle') }}', {
@@ -17,7 +17,7 @@
                   body: JSON.stringify({ open: this.sidebarOpen })
               });
           }
-      }" lang="id">
+      }" @keydown.escape.window="if (window.innerWidth < 1024) sidebarOpen = false" lang="id">
 
 <head>
     <meta charset="utf-8">
@@ -41,27 +41,27 @@
 </head>
 
 <body class="h-full flex bg-gray-100" x-cloak>
-    @if (Auth::user()->roles_id == 1)
+    @if (Auth::user()->roles?->name === 'admin')
     @include('components.navigation.admin')
     @elseif (Auth::user()->roles_id == 3 || Auth::user()->roles_id == 2)
     @include('components.navigation.peneliti')
     @endif
-    <div class="flex-1 flex flex-col min-h-screen sidebar-transition transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-64' : 'ml-20'">
+    <div class="flex-1 min-w-0 flex flex-col min-h-screen sidebar-transition transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'">
 
         <!-- NAVBAR -->
-        <header class="flex items-center justify-between px-6 py-4 relative z-30" x-data="{ userOpen: false }">
-            <button @click="toggleSidebar()" class="text-gray-700 text-xl focus:outline-none">
-                <i class="fa-solid fa-bars"></i>
+        <header class="flex flex-wrap items-center justify-between gap-3 px-3 sm:px-6 py-4 relative z-30" x-data="{ userOpen: false }" @keydown.escape.window="userOpen = false">
+            <button type="button" @click="toggleSidebar()" :aria-expanded="sidebarOpen" aria-label="Buka atau tutup navigasi admin" class="min-h-11 min-w-11 text-gray-700 text-xl focus-visible:outline-2 focus-visible:outline-(--flora-moss)">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
 
             @auth
-            <div class="relative">
+            <div class="relative min-w-0">
                 <button @click="userOpen = !userOpen" @click.outside="userOpen = false"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors">
+                    class="flex min-h-11 min-w-0 items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors focus-visible:outline-2 focus-visible:outline-(--flora-moss)">
                     <div class="w-8 h-8 rounded-full bg-[var(--flora-teal-pale)] border-2 border-[var(--flora-teal-light)] flex items-center justify-center text-[var(--flora-teal)] font-semibold text-sm">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
-                    <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
+                    <span class="min-w-0 wrap-anywhere text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
                     <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-200"
                        :class="{ 'rotate-180': userOpen }"></i>
                 </button>
@@ -73,7 +73,7 @@
                      x-transition:leave="transition ease-in duration-100"
                      x-transition:leave-start="opacity-100 scale-100"
                      x-transition:leave-end="opacity-0 scale-95"
-                     class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 origin-top-right">
+                     class="absolute right-0 mt-2 w-48 max-w-full bg-white rounded-xl shadow-lg border border-gray-100 py-1 origin-top-right">
                     <div class="px-4 py-2 border-b border-gray-100">
                         <p class="text-xs text-gray-400">Masuk sebagai</p>
                         <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->email }}</p>
@@ -92,7 +92,7 @@
         </header>
 
         <!-- CONTENT -->
-        <main class="flex-1 px-6 py-3">
+        <main class="flex-1 min-w-0 px-3 sm:px-6 py-3">
                 @yield('content')
         </main>
     </div>

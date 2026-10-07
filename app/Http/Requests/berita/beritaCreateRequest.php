@@ -28,35 +28,35 @@ class beritaCreateRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-    
+
             'slugs' => [
                 'required',
                 'string',
                 'max:255',
                 'unique:beritas,slugs',
             ],
-    
+
             'kategori_berita_id' => [
                 'required',
                 'string',
                 'max:255',
             ],
-    
+
             'content' => [
                 'required',
                 'string',
             ],
-    
+
             'image_url' => [
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
-    
+
             'status' => [
                 'required',
-                'in:draft,published',
+                'in:public,private,draft',
             ],
         ];
     }

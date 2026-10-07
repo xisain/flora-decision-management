@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Http\Requests\berita\beritaCreateRequest;
 use App\Models\Berita;
 use App\Models\kategoriBerita;
 use Illuminate\Http\Request;
-use App\Http\Requests\berita\beritaCreateRequest;
 use Illuminate\Support\Facades\Log;
 
 class BeritaController extends Controller
@@ -15,8 +16,9 @@ class BeritaController extends Controller
      */
     public function index()
     {
-        $Berita = Berita::all();
-        return view("admin.berita.index", compact("Berita"));
+        $Berita = Berita::with('kategoriBerita')->latest()->paginate(5);
+
+        return view('admin.berita.index', compact('Berita'));
     }
 
     /**
@@ -25,7 +27,8 @@ class BeritaController extends Controller
     public function create()
     {
         $kategoriBerita = kategoriBerita::all();
-        return view("admin.berita.create", compact("kategoriBerita"));
+
+        return view('admin.berita.create', compact('kategoriBerita'));
     }
 
     /**
@@ -33,24 +36,24 @@ class BeritaController extends Controller
      */
     public function store(beritaCreateRequest $request)
     {
-        Log::info("=== STORE BERITA START ===");
+        Log::info('=== STORE BERITA START ===');
 
         $validated = $request->validated();
 
-        Log::info("Validation berhasil", [
-            "data" => $validated,
+        Log::info('Validation berhasil', [
+            'data' => $validated,
         ]);
         $validated = $request->validated();
 
         // dd("VALIDATION LOLOS", $validated);
 
         $kategoriInput = trim($validated['kategori_berita_id']);
-        
+
         Log::info('Input kategori', [
             'kategori' => $kategoriInput,
         ]);
-        
-        $kategori = KategoriBerita::firstOrCreate(
+
+        $kategori = kategoriBerita::firstOrCreate(
             [
                 'nama_kategori' => $kategoriInput,
             ],
@@ -58,30 +61,33 @@ class BeritaController extends Controller
                 'deskripsi' => '',
             ]
         );
-        
+
         Log::info('Kategori berhasil diproses', [
             'id' => $kategori->id,
             'nama' => $kategori->nama_kategori,
         ]);
         $imagePath = null;
 
-        if ($request->hasFile("image_url")) {
-            $imagePath = $request->file("image_url")->store("berita", "public");
+        if ($request->hasFile('image_url')) {
+            $imagePath = $request->file('image_url')->store(
+                'bulungan/berita',
+                's3'
+            );
         }
         Berita::create([
-            "judul" => $validated["judul"],
-            "slugs" => $validated["slugs"],
-            "kategori_berita_id" => $kategori->id,
-            "content" => $validated["content"],
-            "image_url" => $imagePath,
-            "user_id" => auth()->id(),
-            "status" => $validated["status"],
-            "visitor" => 0,
+            'judul' => $validated['judul'],
+            'slugs' => $validated['slugs'],
+            'kategori_berita_id' => $kategori->id,
+            'content' => $validated['content'],
+            'image_url' => $imagePath,
+            'user_id' => auth()->id(),
+            'status' => $validated['status'],
+            'visitor' => 0,
         ]);
 
         return redirect()
-            ->route("admin.berita.index")
-            ->with("success", "Berita berhasil ditambahkan.");
+            ->route('admin.berita.index')
+            ->with('success', 'Berita berhasil ditambahkan.');
     }
 
     /**

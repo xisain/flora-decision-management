@@ -1,5 +1,4 @@
 @extends('layout.admin')
-
 @section('content')
 
 {{-- Jaga agar teks pencarian tetap tampil di input setelah form disubmit,
@@ -148,10 +147,16 @@
                                 #
                             </th>
                             <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                                [Kolom 1]
+                                Gambar
                             </th>
                             <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                                [Kolom 2]
+                                Judul Dan Author
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                                Publikasi
+                            </th>
+                            <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                                Visitor
                             </th>
                             <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-widest text-center">
                                 Aksi
@@ -166,31 +171,50 @@
                                     {{ $Berita->firstItem() + $index }}
                                 </td>
 
-                                <td class="px-5 py-4 text-gray-700">
-                                    <p class="font-medium text-gray-800">{{ $item->nama }}</p>
-                                    <p class="text-xs text-gray-400 mt-0.5">{{ $item->sub_info }}</p>
+                                {{-- Gambar --}}
+                                <td class="px-5 py-4">
+                                    @if ($item->image_url)
+                                        <img src="{{ Str::startsWith($item->image_url, ['http://', 'https://'])
+                                                        ? $item->image_url
+                                                        : Storage::url($item->image_url) }}"
+                                            alt="{{ $item->judul }}"
+                                            class="w-16 h-12 object-cover rounded-lg border border-gray-100"
+                                            loading="lazy"
+                                            onerror="this.onerror=null;this.src='{{ asset('images/placeholder.png') }}';">
+                                    @else
+                                        <div class="w-16 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                                            <i class="fa-solid fa-image text-gray-300 text-xs"></i>
+                                        </div>
+                                    @endif
                                 </td>
 
+                                <td class="px-5 py-4 text-gray-700">
+                                    <p class="font-medium text-gray-800">{{ $item->judul }}</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">{{ optional($item->user)->name ?? '-' }}</p>
+                                </td>
                                 <td class="px-5 py-4 text-gray-600">
-                                    {{ $item->field_lain }}
+                                    {{ $item->status }}
+                                </td>
+                                <td class="px-5 py-4 text-gray-600">
+                                    <p class="text-center">{{ $item->visitor }}</p>
                                 </td>
 
                                 {{-- Kolom aksi --}}
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
 
-                                        <a href="{{ route('[route.prefix].show', $item->id) }}" title="Detail"
+                                        <a href="{{ route('admin.berita.show', $item->id) }}" title="Detail"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-[var(--flora-teal)]
                                                    hover:bg-[var(--flora-teal)]/10 transition-colors">
                                             <i class="fa-solid fa-eye text-xs"></i>
                                         </a>
 
-                                        <a href="{{ route('[route.prefix].edit', $item->id) }}" title="Edit"
+                                        <a href="{{ route('admin.berita.edit', $item->id) }}" title="Edit"
                                             class="p-1.5 rounded-md text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
                                             <i class="fa-solid fa-pen text-xs"></i>
                                         </a>
 
-                                        <form method="POST" action="{{ route('[route.prefix].destroy', $item->id) }}"
+                                        <form method="POST" action="{{ route('admin.berita.destroy', $item->id) }}"
                                             class="form-delete">
                                             @csrf
                                             @method('DELETE')
@@ -207,7 +231,7 @@
 
                             {{-- EMPTY STATE (dalam tabel — dipakai bersama @forelse) --}}
                             <tr>
-                                <td colspan="4" class="px-5 py-16 text-center">
+                                <td colspan="6" class="px-5 py-16 text-center">
                                     <div class="flex flex-col items-center gap-3 text-gray-400">
                                         <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
                                             <i class="fa-solid fa-newspaper text-gray-400 text-xl"></i>

@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\CollectorController;
 use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExplorationTeamController;
-use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\TanamanLoggingController;
+use App\Http\Controllers\Admin\TempatMenarikController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Guest\BeritaController as GuestBeritaController;
 use App\Http\Controllers\Guest\LandingController as AppLandingController;
+use App\Http\Controllers\Guest\TempatMenarikController as PublicTempatMenarikController;
 use App\Http\Controllers\peneliti\inspeksiTanamanController;
 use App\Http\Controllers\peneliti\PenelitiDashboardController;
 use App\Http\Controllers\peneliti\penerimaanTanamanController;
@@ -17,127 +20,144 @@ use App\Http\Controllers\peneliti\ranking\PelaporanPrometheeController;
 use App\Http\Controllers\peneliti\ranking\RankingTanamanController;
 use App\Http\Middleware\adminMiddleware;
 use App\Http\Middleware\pembibitanMiddleware;
-use App\Http\Middleware\RegistrasiMiddleware;
 use App\Http\Middleware\registeredAccount;
+use App\Http\Middleware\RegistrasiMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return redirect()->route('login');
 // })->name('home');
-Route::middleware("auth")->group(function () {
-    Route::post("/sidebar/toggle", function (Request $request) {
-        $request->session()->put("sidebar_open", $request->input("open"));
+Route::middleware('auth')->group(function () {
+    Route::post('/sidebar/toggle', function (Request $request) {
+        $request->session()->put('sidebar_open', $request->input('open'));
 
-        return response()->json(["success" => true]);
-    })->name("sidebar.toggle");
-    Route::prefix("admin")
-        ->middleware([adminMiddleware::class, registeredAccount::class, "auth"])
+        return response()->json(['success' => true]);
+    })->name('sidebar.toggle');
+    Route::prefix('admin')
+        ->middleware([adminMiddleware::class, registeredAccount::class, 'auth'])
         ->group(function () {
-            Route::get("/", [DashboardController::class, "index"])->name(
-                "admin.home",
+            Route::get('/', [DashboardController::class, 'index'])->name(
+                'admin.home',
             );
-            Route::prefix("management")->group(function () {
-                Route::resource("user", UserController::class);
-                Route::resource("collector", CollectorController::class);
+            Route::prefix('management')->group(function () {
+                Route::resource('user', UserController::class);
+                Route::resource('collector', CollectorController::class);
                 Route::resource(
-                    "tim-explorasi",
+                    'tim-explorasi',
                     ExplorationTeamController::class,
                 );
-                Route::resource("criteria", CriteriaController::class);
-                Route::resource("logtanaman", TanamanLoggingController::class);
-                Route::resource("berita", BeritaController::class)->names('admin.berita');
+                Route::resource('criteria', CriteriaController::class);
+                Route::resource('logtanaman', TanamanLoggingController::class);
+                Route::resource('berita', BeritaController::class)->names('admin.berita');
+                Route::resource('tempat-menarik', TempatMenarikController::class)
+                    ->parameters(['tempat-menarik' => 'tempatMenarik'])
+                    ->except('show')->names('admin.tempat-menarik');
             });
         });
-    Route::prefix("registrasi")
+    Route::prefix('registrasi')
         ->middleware([
             RegistrasiMiddleware::class,
             registeredAccount::class,
-            "auth",
+            'auth',
         ])
         ->group(function () {
-            Route::get("/", [
+            Route::get('/', [
                 PenelitiDashboardController::class,
-                "index",
-            ])->name("peneliti.registrasi.home");
+                'index',
+            ])->name('peneliti.registrasi.home');
             Route::resource(
-                "penerimaan",
+                'penerimaan',
                 penerimaanTanamanController::class,
-            )->names("peneliti.penerimaan");
+            )->names('peneliti.penerimaan');
 
             // Ranking & Koleksi Kebun Raya
-            Route::get("ranking", [
+            Route::get('ranking', [
                 RankingTanamanController::class,
-                "index",
-            ])->name("peneliti.ranking.index");
-            Route::post("koleksi", [
+                'index',
+            ])->name('peneliti.ranking.index');
+            Route::post('koleksi', [
                 KebunRayaKoleksiController::class,
-                "store",
-            ])->name("peneliti.koleksi.store");
-            Route::get("koleksi", [
+                'store',
+            ])->name('peneliti.koleksi.store');
+            Route::get('koleksi', [
                 KebunRayaKoleksiController::class,
-                "index",
-            ])->name("peneliti.koleksi.index");
-            Route::delete("koleksi/{id}", [
+                'index',
+            ])->name('peneliti.koleksi.index');
+            Route::delete('koleksi/{id}', [
                 KebunRayaKoleksiController::class,
-                "destroy",
-            ])->name("peneliti.koleksi.destroy");
-            Route::get("koleksi/export", [
+                'destroy',
+            ])->name('peneliti.koleksi.destroy');
+            Route::get('koleksi/export', [
                 KebunRayaKoleksiController::class,
-                "export",
-            ])->name("peneliti.koleksi.export");
+                'export',
+            ])->name('peneliti.koleksi.export');
 
             // Pelaporan PROMETHEE II
-            Route::get("pelaporan", [
+            Route::get('pelaporan', [
                 PelaporanPrometheeController::class,
-                "index",
-            ])->name("peneliti.pelaporan.index");
-            Route::get("pelaporan/export", [
+                'index',
+            ])->name('peneliti.pelaporan.index');
+            Route::get('pelaporan/export', [
                 PelaporanPrometheeController::class,
-                "export",
-            ])->name("peneliti.pelaporan.export");
+                'export',
+            ])->name('peneliti.pelaporan.export');
         });
-    Route::prefix("test")->group(function () {
-        Route::get("/", [RankingTanamanController::class, "index"])->name(
-            "detail.rank",
+    Route::prefix('test')->group(function () {
+        Route::get('/', [RankingTanamanController::class, 'index'])->name(
+            'detail.rank',
         );
-        Route::get("/{inspeksi_tanaman_id}", [
+        Route::get('/{inspeksi_tanaman_id}', [
             RankingTanamanController::class,
-            "findbyInspeksiTanamanId",
+            'findbyInspeksiTanamanId',
         ]);
     });
-    Route::prefix("pembibitan")
+    Route::prefix('pembibitan')
         ->middleware([
             pembibitanMiddleware::class,
             registeredAccount::class,
-            "auth",
+            'auth',
         ])
         ->group(function () {
-            Route::get("/", [
+            Route::get('/', [
                 PenelitiDashboardController::class,
-                "index",
-            ])->name("peneliti.pembibitan.home");
+                'index',
+            ])->name('peneliti.pembibitan.home');
             Route::resource(
-                "penyemaian",
+                'penyemaian',
                 penyemaianTanamanController::class,
-            )->names("peneliti.penyemaian");
+            )->names('peneliti.penyemaian');
 
-            Route::get("inspeksi/editEvaluasi/{id}", [
+            Route::get('inspeksi/editEvaluasi/{id}', [
                 inspeksiTanamanController::class,
-                "editEvaluasi",
-            ])->name("peneliti.inspeksi.editEvaluasi");
-            Route::put("inspeksi/editEvaluasi/{id}", [
+                'editEvaluasi',
+            ])->name('peneliti.inspeksi.editEvaluasi');
+            Route::put('inspeksi/editEvaluasi/{id}', [
                 inspeksiTanamanController::class,
-                "updateEvaluasi",
-            ])->name("peneliti.inspeksi.updateEvaluasi");
+                'updateEvaluasi',
+            ])->name('peneliti.inspeksi.updateEvaluasi');
 
             Route::resource(
-                "inspeksi",
+                'inspeksi',
                 inspeksiTanamanController::class,
-            )->names("peneliti.inspeksi");
+            )->names('peneliti.inspeksi');
         });
 });
-Route::middleware("guest")->group(function () {
-    Route::get('/',[AppLandingController::class,'index'])->name('landing');
+Route::get('/', [AppLandingController::class, 'index'])->name('landing');
+Route::get('/jelajah/tempat-menarik', [PublicTempatMenarikController::class, 'index'])->name('public.tempat-menarik.index');
+Route::get('/jelajah/tempat-menarik/{tempatMenarik}', [PublicTempatMenarikController::class, 'show'])->name('public.tempat-menarik.show');
+Route::prefix('berita')->group(function () {
+    Route::get('/', [GuestBeritaController::class, 'index'])->name('berita.index');
+    Route::get('/{slug}', [GuestBeritaController::class, 'detail'])->name('berita.detail');
 });
-require __DIR__ . "/auth.php";
+Route::get('/visi', [AppLandingController::class, 'visi'])->name('visi');
+Route::get('/tentang', [AppLandingController::class, 'tentang'])->name('tentang');
+Route::get('/struktural', [AppLandingController::class, 'struktural'])->name('struktural');
+
+Route::middleware('guest')->group(function () {
+    // Route::get('/',[AppLandingController::class,'index'])->name('landing');
+    // Route::get('/visi',[AppLandingController::class,'visi'])->name('visi');
+    // Route::get('/tentang',[AppLandingController::class,'tentang'])->name('tentang');
+    // Route::get('/struktural',[AppLandingController::class,'struktural'])->name('struktural');
+});
+require __DIR__.'/auth.php';

@@ -268,9 +268,13 @@
                             Draft
                         </option>
 
-                        <option value="published"
-                            {{ old('status') === 'published' ? 'selected' : '' }}>
+                        <option value="public"
+                            {{ old('status') === 'public' ? 'selected' : '' }}>
                             Dipublikasikan
+                        </option>
+                        <option value="private"
+                            {{ old('status') === 'private' ? 'selected' : '' }}>
+                            Private
                         </option>
 
                     </select>
